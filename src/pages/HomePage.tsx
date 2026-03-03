@@ -14,7 +14,7 @@ const services = [
     { key: 'kpr-tapera', label: 'KPR TAPERA', subtitle: 'Kredit Pemilikan Rumah Tapera', Icon: Building },
     { key: 'kbr', label: 'KBR', subtitle: 'Kredit Bangun Rumah', Icon: Hammer },
     { key: 'krr', label: 'KRR', subtitle: 'Kredit Renovasi Rumah', Icon: Wrench },
-    { key: 'refund', label: 'TABUNGAN', subtitle: 'Pengembalian Tabungan Tapera', Icon: Wallet },
+    { key: 'refund', label: 'E-Klaim', subtitle: 'Pengembalian Tabungan Tapera', Icon: Wallet },
 ];
 
 // Banner slides — add/remove entries here to manage the carousel
@@ -25,7 +25,6 @@ const bannerSlides = [
     { id: 4, imageUrl: '/banner-4.jpg' },
     { id: 5, imageUrl: '/banner-5.jpg' },
     { id: 6, imageUrl: '/banner-6.jpg' },
-    { id: 7, imageUrl: '/banner-7.jpg' },
 ];
 
 const HomePage: React.FC<HomePageProps> = ({ onNavigate, onStartKpr }) => {
