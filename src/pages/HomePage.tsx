@@ -19,9 +19,9 @@ const services = [
 
 // Banner slides — add/remove entries here to manage the carousel
 const bannerSlides = [
-    { id: 1, imageUrl: '/banner-11.jpg' },
-    { id: 2, imageUrl: '/banner-12.jpg' },
-    { id: 3, imageUrl: '/banner-13.jpg' },
+    { id: 1, imageUrl: '/banner-1.jpg' },
+    { id: 2, imageUrl: '/banner-2.jpg' },
+    { id: 3, imageUrl: '/banner-3.jpg' },
     { id: 4, imageUrl: '/banner-4.jpg' },
     { id: 5, imageUrl: '/banner-5.jpg' },
     { id: 6, imageUrl: '/banner-6.jpg' },
