@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import PropertyCard from '../components/PropertyCard';
 import { useAppContext } from '../context/AppContext';
 import { useProperties } from '../hooks/useProperties';
-import { Search, MapPin, ChevronRight, Home, Building, Hammer, Wrench, CalendarCheck, Bell, User, Wallet, LogOut, UserPlus, LogIn, ChevronLeft, RefreshCw, Mail } from 'lucide-react';
+import { Search, MapPin, ChevronRight, Home, Building, Hammer, Wrench, Bookmark, Bell, User, Wallet, LogOut, UserPlus, LogIn, ChevronLeft, RefreshCw, Mail } from 'lucide-react';
 
 interface HomePageProps {
     onNavigate: (page: string, id?: string) => void;
@@ -11,11 +11,12 @@ interface HomePageProps {
 
 const services = [
     { key: 'kpr-flpp', label: 'KPR FLPP', subtitle: 'Kredit Pemilikan Rumah FLPP', Icon: Home },
-    { key: 'kpr-tapera', label: 'KPR TAPERA', subtitle: 'Kredit Pemilikan Rumah Tapera', Icon: Building },
     { key: 'kbr', label: 'KBR', subtitle: 'Kredit Bangun Rumah', Icon: Hammer },
     { key: 'krr', label: 'KRR', subtitle: 'Kredit Renovasi Rumah', Icon: Wrench },
     { key: 'refund', label: 'E-Klaim', subtitle: 'Pengembalian Tabungan Tapera', Icon: Wallet },
+    { key: 'kpr-tapera', label: 'KPR TAPERA', subtitle: 'Kredit Pemilikan Rumah Tapera', Icon: Building },
 ];
+
 
 // Banner slides — add/remove entries here to manage the carousel
 const bannerSlides = [
@@ -28,7 +29,7 @@ const bannerSlides = [
 ];
 
 const HomePage: React.FC<HomePageProps> = ({ onNavigate, onStartKpr }) => {
-    const { notifications, isLoggedIn, userName, login, logout } = useAppContext();
+    const { notifications, isLoggedIn, userName, login, logout, wishlist } = useAppContext();
     const { properties, loading, error, filters, setFilters, refetch, userCoords, setUserCoords } = useProperties();
     const [activeSlide, setActiveSlide] = useState(0);
     const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -39,6 +40,7 @@ const HomePage: React.FC<HomePageProps> = ({ onNavigate, onStartKpr }) => {
     const [showNotifPanel, setShowNotifPanel] = useState(false);
     const [loginMode, setLoginMode] = useState<'login' | 'daftar'>('login');
     const [loginInput, setLoginInput] = useState({ name: '', nik: '', password: '' });
+    const [showWishlist, setShowWishlist] = useState(false);
     const userMenuRef = useRef<HTMLDivElement>(null);
 
     // Close dropdown when clicking outside
@@ -191,7 +193,7 @@ const HomePage: React.FC<HomePageProps> = ({ onNavigate, onStartKpr }) => {
                         />
                     </div>
                     {[
-                        { Icon: CalendarCheck, badge: 0, onClick: () => onNavigate('tracker') },
+                        { Icon: Bookmark, badge: wishlist.length, onClick: () => setShowWishlist(true) },
                         { Icon: Bell, badge: 2, onClick: () => { } }
                     ].map(({ Icon, badge, onClick }, i) => (
                         <button
@@ -576,6 +578,72 @@ const HomePage: React.FC<HomePageProps> = ({ onNavigate, onStartKpr }) => {
                     </div>
                 )
             }
+
+            {/* ── Wishlist Bottom Sheet ── */}
+            {showWishlist && (() => {
+                const wishlistProperties = properties.filter(p => wishlist.includes(p.id));
+                return (
+                    <>
+                        <div
+                            onClick={() => setShowWishlist(false)}
+                            style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.45)', zIndex: 40, backdropFilter: 'blur(2px)' }}
+                        />
+                        <div style={{
+                            position: 'fixed', bottom: 0, left: 0, right: 0,
+                            backgroundColor: 'white', borderRadius: '20px 20px 0 0',
+                            boxShadow: '0 -4px 30px rgba(0,0,0,0.15)',
+                            zIndex: 50, padding: '1.25rem 1rem 5rem', maxHeight: '80vh', overflowY: 'auto'
+                        }}>
+                            <div style={{ width: '40px', height: '4px', backgroundColor: '#E5E7EB', borderRadius: '2px', margin: '0 auto 1rem' }} />
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+                                <h2 style={{ fontSize: '1rem', fontWeight: 800, color: '#111827', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                    <Bookmark size={18} color="#2563EB" fill="#DBEAFE" />
+                                    Wishlist Saya ({wishlist.length})
+                                </h2>
+                                <button onClick={() => setShowWishlist(false)} style={{ border: 'none', background: '#F3F4F6', borderRadius: '50%', width: '32px', height: '32px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}>
+                                    <span style={{ fontSize: '1rem', color: '#6B7280', lineHeight: 1 }}>✕</span>
+                                </button>
+                            </div>
+
+                            {wishlistProperties.length === 0 ? (
+                                <div style={{ textAlign: 'center', padding: '2.5rem 1rem' }}>
+                                    <Bookmark size={44} color="#D1D5DB" style={{ margin: '0 auto 0.75rem' }} />
+                                    <p style={{ color: '#9CA3AF', fontSize: '0.875rem' }}>Belum ada rumah yang disimpan.</p>
+                                    <p style={{ color: '#B0BAC9', fontSize: '0.78rem', marginTop: '4px' }}>Ketuk ikon ❤ pada listing untuk menyimpan.</p>
+                                </div>
+                            ) : (
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                                    {wishlistProperties.map(prop => (
+                                        <div
+                                            key={prop.id}
+                                            onClick={() => { setShowWishlist(false); onNavigate('detail', prop.id); }}
+                                            style={{
+                                                display: 'flex', gap: '12px', backgroundColor: '#F9FAFB',
+                                                borderRadius: '12px', padding: '0.75rem', cursor: 'pointer',
+                                                border: '1px solid #E5E7EB', alignItems: 'center'
+                                            }}
+                                        >
+                                            <img
+                                                src={prop.imageUrl || '/placeholder.jpg'}
+                                                alt={prop.title}
+                                                style={{ width: '72px', height: '64px', borderRadius: '8px', objectFit: 'cover', flexShrink: 0 }}
+                                            />
+                                            <div style={{ flex: 1, minWidth: 0 }}>
+                                                <p style={{ fontSize: '0.85rem', fontWeight: 700, color: '#111827', marginBottom: '2px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{prop.title}</p>
+                                                <p style={{ fontSize: '0.72rem', color: '#6B7280', marginBottom: '4px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{prop.location}</p>
+                                                <p style={{ fontSize: '0.85rem', fontWeight: 800, color: '#2563EB' }}>
+                                                    {new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(prop.price)}
+                                                </p>
+                                            </div>
+                                            <ChevronRight size={16} color="#D1D5DB" style={{ flexShrink: 0 }} />
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+                    </>
+                );
+            })()}
         </div >
     );
 };
