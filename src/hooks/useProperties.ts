@@ -157,6 +157,12 @@ export interface PropertyFilters {
     sortByDistance?: boolean;
 }
 
+export interface WilayahOptions {
+    provinsi: string[];
+    kabKota: { [prov: string]: string[] };
+    kecamatan: { [kab: string]: string[] };
+}
+
 export interface UsePropertiesResult {
     properties: Property[];
     loading: boolean;
@@ -166,6 +172,7 @@ export interface UsePropertiesResult {
     filters: PropertyFilters;
     userCoords: { lat: number; lng: number } | null;
     setUserCoords: (coords: { lat: number; lng: number } | null) => void;
+    wilayahOptions: WilayahOptions;
 }
 
 export const useProperties = (): UsePropertiesResult => {
@@ -173,6 +180,7 @@ export const useProperties = (): UsePropertiesResult => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [filters, setFilters] = useState<PropertyFilters>({});
+    const [wilayahOptions, setWilayahOptions] = useState<WilayahOptions>({ provinsi: [], kabKota: {}, kecamatan: {} });
     const [userCoords, setUserCoords] = useState<{ lat: number; lng: number } | null>(null);
     const [tick, setTick] = useState(0);
 
@@ -186,14 +194,10 @@ export const useProperties = (): UsePropertiesResult => {
                 const params = new URLSearchParams({
                     sort: 'terbaru',
                     page: '1',
-                    limit: '48', // Increased limit for better near-me results
+                    limit: '100',
                 });
 
-                if (filters.keyword) params.append('pencarian', filters.keyword);
-                if (filters.provinsi) params.append('provinsi', filters.provinsi);
-                if (filters.kabKota) params.append('kabupaten', filters.kabKota);
-                if (filters.kecamatan) params.append('kecamatan', filters.kecamatan);
-                if (filters.jenisPerumahan) params.append('jenisPerumahan', filters.jenisPerumahan);
+                // NOTE: Tapera API ignores all filter params — all filtering is done client-side.
 
                 const res = await fetch(`/api/tapera/ajax/lokasi/search?${params.toString()}`, {
                     headers: { Accept: 'application/json' },
@@ -201,9 +205,53 @@ export const useProperties = (): UsePropertiesResult => {
                 if (!res.ok) throw new Error(`HTTP ${res.status}`);
                 const json: TaperaApiResponse = await res.json();
                 if (!cancelled) {
-                    let mapped = (json.data ?? [])
+                    const rawData = json.data ?? [];
+                    let mapped = rawData
                         .map(mapToProperty)
                         .filter((p): p is Property => p !== null);
+
+                    // ── Build wilayah options from raw API data ─────────────
+                    const provSet = new Set<string>();
+                    const kabByProv: { [prov: string]: Set<string> } = {};
+                    const kecByKab: { [kab: string]: Set<string> } = {};
+                    rawData.forEach(item => {
+                        const { provinsi, kabupaten, kecamatan } = item.wilayah ?? {};
+                        if (provinsi) {
+                            provSet.add(provinsi);
+                            if (!kabByProv[provinsi]) kabByProv[provinsi] = new Set();
+                            if (kabupaten) {
+                                kabByProv[provinsi].add(kabupaten);
+                                if (!kecByKab[kabupaten]) kecByKab[kabupaten] = new Set();
+                                if (kecamatan) kecByKab[kabupaten].add(kecamatan);
+                            }
+                        }
+                    });
+                    setWilayahOptions({
+                        provinsi: [...provSet].sort(),
+                        kabKota: Object.fromEntries(Object.entries(kabByProv).map(([k, v]) => [k, [...v].sort()])),
+                        kecamatan: Object.fromEntries(Object.entries(kecByKab).map(([k, v]) => [k, [...v].sort()])),
+                    });
+
+                    // ── Client-side filtering ──────────────────────────────
+                    if (filters.keyword) {
+                        const kw = filters.keyword.toLowerCase();
+                        mapped = mapped.filter(p =>
+                            p.title.toLowerCase().includes(kw) ||
+                            p.location.toLowerCase().includes(kw)
+                        );
+                    }
+                    if (filters.provinsi) {
+                        const prov = filters.provinsi.toLowerCase();
+                        mapped = mapped.filter(p => p.location.toLowerCase().includes(prov));
+                    }
+                    if (filters.kabKota) {
+                        const kab = filters.kabKota.toLowerCase();
+                        mapped = mapped.filter(p => p.location.toLowerCase().includes(kab));
+                    }
+                    if (filters.kecamatan) {
+                        const kec = filters.kecamatan.toLowerCase();
+                        mapped = mapped.filter(p => p.location.toLowerCase().includes(kec));
+                    }
 
                     // Inject distance if userCoords available
                     if (userCoords) {
@@ -243,5 +291,6 @@ export const useProperties = (): UsePropertiesResult => {
 
     const refetch = () => setTick(t => t + 1);
 
-    return { properties, loading, error, refetch, setFilters, filters, userCoords, setUserCoords };
+    return { properties, loading, error, refetch, setFilters, filters, userCoords, setUserCoords, wilayahOptions };
+
 };

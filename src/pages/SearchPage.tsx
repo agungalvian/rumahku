@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ArrowLeft, Search, MapPin, X, ChevronDown, SlidersHorizontal } from 'lucide-react';
+import { ArrowLeft, Search, X, ChevronDown, SlidersHorizontal } from 'lucide-react';
 import { useProperties } from '../hooks/useProperties';
 import PropertyCard from '../components/PropertyCard';
 
@@ -8,38 +8,22 @@ interface SearchPageProps {
 }
 
 const SearchPage: React.FC<SearchPageProps> = ({ onNavigate }) => {
-    const { setFilters, filters, setUserCoords, userCoords, properties, loading, error } = useProperties();
+    const { setFilters, filters, properties, loading, error, wilayahOptions } = useProperties();
     const [localKeyword, setLocalKeyword] = useState(filters.keyword || '');
     const [selectedProv, setSelectedProv] = useState(filters.provinsi || '');
     const [selectedKab, setSelectedKab] = useState(filters.kabKota || '');
     const [selectedKec, setSelectedKec] = useState(filters.kecamatan || '');
     const [showFilters, setShowFilters] = useState(false);
 
+    // Debounce: auto-apply keyword filter 500ms after user stops typing
     useEffect(() => {
-        // Automatic location on mount if not yet active
-        if (navigator.geolocation && !userCoords) {
-            navigator.geolocation.getCurrentPosition(
-                (pos) => {
-                    setUserCoords({ lat: pos.coords.latitude, lng: pos.coords.longitude });
-                    setFilters(prev => ({ ...prev, sortByDistance: true }));
-                },
-                (err) => console.error('Geolocation error:', err),
-                { enableHighAccuracy: true, timeout: 5000 }
-            );
-        }
-    }, []);
+        const timer = setTimeout(() => {
+            setFilters(prev => ({ ...prev, keyword: localKeyword || undefined }));
+        }, 500);
+        return () => clearTimeout(timer);
+    }, [localKeyword]);
 
-    // List of common Provinces for the dropdown (Mock data for the UI)
-    const provinces = [
-        "ACEH", "SUMATERA UTARA", "SUMATERA BARAT", "RIAU", "JAMBI",
-        "SUMATERA SELATAN", "BENGKULU", "LAMPUNG", "KEP. BANGKA BELITUNG",
-        "KEP. RIAU", "DKI JAKARTA", "JAWA BARAT", "JAWA TENGAH", "DI YOGYAKARTA",
-        "JAWA TIMUR", "BANTEN", "BALI", "NUSA TENGGARA BARAT", "NUSA TENGGARA TIMUR",
-        "KALIMANTAN BARAT", "KALIMANTAN TENGAH", "KALIMANTAN SELATAN",
-        "KALIMANTAN TIMUR", "KALIMANTAN UTARA", "SULAWESI UTARA", "SULAWESI TENGAH",
-        "SULAWESI SELATAN", "SULAWESI TENGGARA", "GORONTALO", "SULAWESI BARAT",
-        "MALUKU", "MALUKU UTARA", "PAPUA BARAT", "PAPUA"
-    ];
+
 
     const handleApplyFilter = () => {
         setFilters({
@@ -91,10 +75,10 @@ const SearchPage: React.FC<SearchPageProps> = ({ onNavigate }) => {
                         <Search size={18} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#9CA3AF' }} />
                         <input
                             type="text"
-                            placeholder="Cari perumahan..."
+                            placeholder="Ketik nama perumahan, kota, provinsi..."
                             value={localKeyword}
                             onChange={e => setLocalKeyword(e.target.value)}
-                            onKeyDown={e => e.key === 'Enter' && handleApplyFilter()}
+                            autoFocus
                             style={{
                                 width: '100%', padding: '0.6rem 0.6rem 0.6rem 2.5rem',
                                 borderRadius: '10px', border: '1.5px solid #F3F4F6',
@@ -137,13 +121,10 @@ const SearchPage: React.FC<SearchPageProps> = ({ onNavigate }) => {
             <div style={{ padding: '1rem' }}>
                 <div style={{ marginBottom: '1rem' }}>
                     <h2 style={{ fontSize: '1rem', fontWeight: 700, color: '#111827' }}>
-                        {loading ? 'Mencari rumah...' : `${properties.length} Rumah ditemukan`}
+                        {loading ? 'Mencari...' : `${properties.length} Rumah ditemukan`}
+                        {localKeyword && !loading && <span style={{ fontWeight: 400, color: '#6B7280' }}> untuk "{localKeyword}"</span>}
                     </h2>
-                    {userCoords && (
-                        <p style={{ fontSize: '0.75rem', color: '#2563EB', fontWeight: 500, display: 'flex', alignItems: 'center', gap: '4px', marginTop: '4px' }}>
-                            <MapPin size={12} fill="#2563EB" /> Menampilkan hasil terdekat dari Anda
-                        </p>
-                    )}
+                    <p style={{ fontSize: '0.72rem', color: '#9CA3AF', marginTop: '2px' }}>Data dari Tapera Sikumbang API</p>
                 </div>
 
                 {loading ? (
@@ -195,40 +176,56 @@ const SearchPage: React.FC<SearchPageProps> = ({ onNavigate }) => {
                         </div>
 
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+                            {/* Provinsi */}
                             <div>
-                                <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, marginBottom: '0.5rem' }}>Provinsi</label>
+                                <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, marginBottom: '0.5rem' }}>
+                                    Provinsi <span style={{ color: '#9CA3AF', fontWeight: 400 }}>({wilayahOptions.provinsi.length} tersedia)</span>
+                                </label>
                                 <select
                                     value={selectedProv}
-                                    onChange={e => setSelectedProv(e.target.value)}
-                                    style={{ width: '100%', padding: '0.75rem', borderRadius: '12px', border: '1.5px solid #E5E7EB', backgroundColor: 'white' }}
+                                    onChange={e => { setSelectedProv(e.target.value); setSelectedKab(''); setSelectedKec(''); }}
+                                    style={{ width: '100%', padding: '0.75rem', borderRadius: '12px', border: '1.5px solid #E5E7EB', backgroundColor: 'white', fontSize: '0.9rem' }}
                                 >
                                     <option value="">Semua Provinsi</option>
-                                    {provinces.map(p => <option key={p} value={p}>{p}</option>)}
+                                    {wilayahOptions.provinsi.map(p => <option key={p} value={p}>{p}</option>)}
                                 </select>
                             </div>
 
+                            {/* Kab/Kota — only show options for selected province */}
                             <div>
-                                <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, marginBottom: '0.5rem' }}>Kabupaten/Kota</label>
-                                <input
-                                    type="text"
-                                    placeholder="Nama Kabupaten/Kota"
+                                <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, marginBottom: '0.5rem' }}>
+                                    Kabupaten/Kota
+                                    {selectedProv && <span style={{ color: '#9CA3AF', fontWeight: 400 }}> ({(wilayahOptions.kabKota[selectedProv] ?? []).length} tersedia)</span>}
+                                </label>
+                                <select
                                     value={selectedKab}
-                                    onChange={e => setSelectedKab(e.target.value)}
-                                    style={{ width: '100%', padding: '0.75rem', borderRadius: '12px', border: '1.5px solid #E5E7EB' }}
-                                />
+                                    onChange={e => { setSelectedKab(e.target.value); setSelectedKec(''); }}
+                                    disabled={!selectedProv}
+                                    style={{ width: '100%', padding: '0.75rem', borderRadius: '12px', border: '1.5px solid #E5E7EB', backgroundColor: selectedProv ? 'white' : '#F9FAFB', fontSize: '0.9rem' }}
+                                >
+                                    <option value="">{selectedProv ? 'Semua Kab/Kota' : '— Pilih Provinsi dulu —'}</option>
+                                    {(wilayahOptions.kabKota[selectedProv] ?? []).map(k => <option key={k} value={k}>{k}</option>)}
+                                </select>
                             </div>
 
+                            {/* Kecamatan — only show options for selected kab/kota */}
                             <div>
-                                <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, marginBottom: '0.5rem' }}>Kecamatan</label>
-                                <input
-                                    type="text"
-                                    placeholder="Nama Kecamatan"
+                                <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, marginBottom: '0.5rem' }}>
+                                    Kecamatan
+                                    {selectedKab && <span style={{ color: '#9CA3AF', fontWeight: 400 }}> ({(wilayahOptions.kecamatan[selectedKab] ?? []).length} tersedia)</span>}
+                                </label>
+                                <select
                                     value={selectedKec}
                                     onChange={e => setSelectedKec(e.target.value)}
-                                    style={{ width: '100%', padding: '0.75rem', borderRadius: '12px', border: '1.5px solid #E5E7EB' }}
-                                />
+                                    disabled={!selectedKab}
+                                    style={{ width: '100%', padding: '0.75rem', borderRadius: '12px', border: '1.5px solid #E5E7EB', backgroundColor: selectedKab ? 'white' : '#F9FAFB', fontSize: '0.9rem' }}
+                                >
+                                    <option value="">{selectedKab ? 'Semua Kecamatan' : '— Pilih Kab/Kota dulu —'}</option>
+                                    {(wilayahOptions.kecamatan[selectedKab] ?? []).map(k => <option key={k} value={k}>{k}</option>)}
+                                </select>
                             </div>
                         </div>
+
 
                         <button
                             onClick={handleApplyFilter}
