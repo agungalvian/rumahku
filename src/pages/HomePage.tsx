@@ -377,7 +377,12 @@ const HomePage: React.FC<HomePageProps> = ({ onNavigate, onStartKpr }) => {
                     {services.map(svc => (
                         <button
                             key={svc.key}
-                            onClick={() => onStartKpr?.()}
+                            onClick={() => {
+                                if (svc.key === 'kbr') onNavigate('kbr');
+                                else if (svc.key === 'krr') onNavigate('krr');
+                                else if (svc.key === 'refund') onNavigate('eklaim');
+                                else onStartKpr?.();
+                            }}
                             style={{
                                 width: '85px',
                                 display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px',

@@ -10,6 +10,9 @@ import ProfilePage from './pages/ProfilePage';
 import PesertaPage from './pages/PesertaPage';
 import AktivasiPeserta from './pages/peserta/AktivasiPeserta';
 import DaftarMandiri from './pages/peserta/DaftarMandiri';
+import KbrPage from './pages/KbrPage';
+import KrrPage from './pages/KrrPage';
+import EklaimPage from './pages/EklaimPage';
 import { LayoutGrid, Calculator, CalendarCheck, MessageCircle, RefreshCw, IdCard } from 'lucide-react';
 import { useAppContext } from './context/AppContext';
 import { usePWAUpdate } from './hooks/usePWAUpdate';
@@ -106,6 +109,9 @@ function App() {
       {currentPage === 'kpr' && <KprFlowPage onNavigate={navigateTo} />}
       {currentPage === 'search' && <SearchPage onNavigate={navigateTo} />}
       {currentPage === 'profile' && <ProfilePage onNavigate={navigateTo} />}
+      {currentPage === 'kbr' && <KbrPage onNavigate={navigateTo} />}
+      {currentPage === 'krr' && <KrrPage onNavigate={navigateTo} />}
+      {currentPage === 'eklaim' && <EklaimPage onNavigate={navigateTo} />}
 
       {/* 5-Tab Bottom Navigation */}
       {isTab && (
