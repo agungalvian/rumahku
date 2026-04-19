@@ -28,8 +28,6 @@ services:
       - POSTGRES_USER=tapera_user
       - POSTGRES_PASSWORD=tapera_password
       - POSTGRES_DB=tapera_db
-    ports:
-      - "5432:5432"
     volumes:
       - ./server/init.sql:/docker-entrypoint-initdb.d/init.sql
       - pgdata:/var/lib/postgresql/data

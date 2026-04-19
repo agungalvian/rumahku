@@ -117,7 +117,7 @@ const krrData = [
 const fmt = (n: number) =>
     new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(n);
 
-const COLORS = ['#059669', '#2563EB', '#0891B2', '#059669', '#D97706', '#DC2626', '#EC4899', '#6B7280'];
+const COLORS = ['#059669', 'var(--primary)', '#0891B2', '#059669', '#D97706', '#DC2626', '#EC4899', '#6B7280'];
 
 const KrrPage: React.FC<KrrPageProps> = ({ onNavigate }) => {
     const [selectedWilayahIdx, setSelectedWilayahIdx] = useState(0);
@@ -134,7 +134,7 @@ const KrrPage: React.FC<KrrPageProps> = ({ onNavigate }) => {
         <div style={{ minHeight: '100vh', backgroundColor: '#F3F4F6', paddingBottom: '100px' }}>
 
             {/* Header */}
-            <div style={{ background: 'linear-gradient(135deg, #059669 0%, #047857 100%)', padding: '1rem' }}>
+            <div style={{ background: 'var(--primary)', padding: '1rem' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '1.25rem' }}>
                     <button
                         onClick={() => onNavigate('home')}
@@ -162,10 +162,10 @@ const KrrPage: React.FC<KrrPageProps> = ({ onNavigate }) => {
                         onClick={() => setShowCalc(v => !v)}
                         style={{ width: '100%', background: '#ECFDF5', border: 'none', padding: '0.875rem 1rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', cursor: 'pointer' }}
                     >
-                        <span style={{ display: 'flex', alignItems: 'center', gap: '8px', fontWeight: 700, color: '#065F46', fontSize: '0.9rem' }}>
-                            <Calculator size={18} color="#059669" /> Kalkulator RAB Renovasi
+                        <span style={{ display: 'flex', alignItems: 'center', gap: '8px', fontWeight: 700, color: 'var(--primary-dark)', fontSize: '0.9rem' }}>
+                            <Calculator size={18} color="var(--primary)" /> Kalkulator RAB Renovasi
                         </span>
-                        {showCalc ? <ChevronUp size={18} color="#059669" /> : <ChevronDown size={18} color="#059669" />}
+                        {showCalc ? <ChevronUp size={18} color="var(--primary)" /> : <ChevronDown size={18} color="var(--primary)" />}
                     </button>
 
                     {showCalc && (
@@ -184,7 +184,7 @@ const KrrPage: React.FC<KrrPageProps> = ({ onNavigate }) => {
                                 </select>
                                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: '5px', marginTop: '8px' }}>
                                     {selectedKrr.provinsi.map(p => (
-                                        <span key={p} style={{ backgroundColor: '#ECFDF5', color: '#059669', padding: '2px 8px', borderRadius: '20px', fontSize: '0.65rem', fontWeight: 600 }}>{p}</span>
+                                        <span key={p} style={{ backgroundColor: 'var(--primary-light)', color: 'var(--primary)', padding: '2px 8px', borderRadius: '20px', fontSize: '0.65rem', fontWeight: 600 }}>{p}</span>
                                     ))}
                                 </div>
                             </div>
@@ -201,7 +201,7 @@ const KrrPage: React.FC<KrrPageProps> = ({ onNavigate }) => {
                                         max={500}
                                         value={luas}
                                         onChange={e => setLuas(e.target.value)}
-                                        style={{ flex: 1, padding: '0.65rem', borderRadius: '10px', border: '1.5px solid #059669', fontSize: '1.1rem', fontWeight: 700, textAlign: 'center', color: '#111827' }}
+                                        style={{ flex: 1, padding: '0.65rem', borderRadius: '10px', border: '1.5px solid var(--primary)', fontSize: '1.1rem', fontWeight: 700, textAlign: 'center', color: '#111827' }}
                                     />
                                     <button onClick={() => setLuas(v => String((parseFloat(v) || 0) + 1))}
                                         style={{ width: '40px', height: '40px', borderRadius: '10px', border: '1.5px solid #E5E7EB', background: '#F9FAFB', fontSize: '1.2rem', cursor: 'pointer', fontWeight: 700 }}>+</button>
@@ -210,7 +210,7 @@ const KrrPage: React.FC<KrrPageProps> = ({ onNavigate }) => {
                                 <div style={{ display: 'flex', gap: '6px', marginTop: '8px' }}>
                                     {[12, 21, 30, 36, 45, 60].map(l => (
                                         <button key={l} onClick={() => setLuas(String(l))}
-                                            style={{ flex: 1, padding: '5px 0', borderRadius: '8px', border: '1px solid', borderColor: luasNum === l ? '#059669' : '#E5E7EB', backgroundColor: luasNum === l ? '#ECFDF5' : '#F9FAFB', color: luasNum === l ? '#059669' : '#6B7280', fontSize: '0.72rem', fontWeight: 600, cursor: 'pointer' }}>
+                                            style={{ flex: 1, padding: '5px 0', borderRadius: '8px', border: '1px solid', borderColor: luasNum === l ? 'var(--primary)' : '#E5E7EB', backgroundColor: luasNum === l ? 'var(--primary-light)' : '#F9FAFB', color: luasNum === l ? 'var(--primary)' : '#6B7280', fontSize: '0.72rem', fontWeight: 600, cursor: 'pointer' }}>
                                             {l}
                                         </button>
                                     ))}
@@ -218,7 +218,7 @@ const KrrPage: React.FC<KrrPageProps> = ({ onNavigate }) => {
                             </div>
 
                             {/* Total */}
-                            <div style={{ background: 'linear-gradient(135deg, #059669, #047857)', borderRadius: '14px', padding: '1rem 1.25rem', marginBottom: '1rem', color: 'white' }}>
+                             <div style={{ background: 'var(--gradient-primary)', borderRadius: '14px', padding: '1rem 1.25rem', marginBottom: '1rem', color: 'white' }}>
                                 <p style={{ fontSize: '0.72rem', opacity: 0.8, margin: '0 0 2px' }}>Estimasi Total RAB Renovasi</p>
                                 <p style={{ fontSize: '1.6rem', fontWeight: 900, margin: 0 }}>{fmt(totalBiaya)}</p>
                                 <p style={{ fontSize: '0.7rem', opacity: 0.75, margin: '4px 0 0' }}>
@@ -264,7 +264,7 @@ const KrrPage: React.FC<KrrPageProps> = ({ onNavigate }) => {
                         'Memiliki rumah yang akan direnovasi secara sah',
                     ].map(s => (
                         <div key={s} style={{ display: 'flex', alignItems: 'flex-start', gap: '8px', marginBottom: '6px' }}>
-                            <CheckCircle2 size={15} color="#059669" style={{ marginTop: '1px', flexShrink: 0 }} />
+                            <CheckCircle2 size={15} color="var(--primary)" style={{ marginTop: '1px', flexShrink: 0 }} />
                             <p style={{ fontSize: '0.82rem', color: '#374151', margin: 0 }}>{s}</p>
                         </div>
                     ))}
@@ -272,14 +272,14 @@ const KrrPage: React.FC<KrrPageProps> = ({ onNavigate }) => {
 
                 {/* Standar biaya referensi */}
                 <h3 style={{ fontWeight: 700, fontSize: '0.9rem', color: '#1F2937', marginBottom: '0.65rem' }}>
-                    <FileText size={15} style={{ verticalAlign: 'middle', marginRight: '6px', color: '#059669' }} />
+                    <FileText size={15} style={{ verticalAlign: 'middle', marginRight: '6px', color: 'var(--primary)' }} />
                     Standar Biaya per Wilayah
                 </h3>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem', marginBottom: '1rem' }}>
                     {krrData.map((krr, idx) => {
                         const isOpen = expandedIdx === idx;
                         return (
-                            <div key={idx} style={{ backgroundColor: 'white', borderRadius: '12px', overflow: 'hidden', boxShadow: '0 1px 3px rgba(0,0,0,0.05)', border: isOpen ? '2px solid #059669' : '2px solid transparent', transition: 'border 0.2s' }}>
+                            <div key={idx} style={{ backgroundColor: 'white', borderRadius: '12px', overflow: 'hidden', boxShadow: '0 1px 3px rgba(0,0,0,0.05)', border: isOpen ? '2px solid var(--primary)' : '2px solid transparent', transition: 'border 0.2s' }}>
                                 <button
                                     onClick={() => setExpandedIdx(isOpen ? null : idx)}
                                     style={{ width: '100%', padding: '0.875rem 1rem', background: 'none', border: 'none', cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
@@ -291,18 +291,18 @@ const KrrPage: React.FC<KrrPageProps> = ({ onNavigate }) => {
                                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                                         <button
                                             onClick={e => { e.stopPropagation(); setSelectedWilayahIdx(idx); setShowCalc(true); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-                                            style={{ padding: '4px 10px', fontSize: '0.68rem', fontWeight: 700, borderRadius: '20px', border: 'none', backgroundColor: '#ECFDF5', color: '#059669', cursor: 'pointer' }}
+                                            style={{ padding: '4px 10px', fontSize: '0.68rem', fontWeight: 700, borderRadius: '20px', border: 'none', backgroundColor: 'var(--primary-light)', color: 'var(--primary)', cursor: 'pointer' }}
                                         >
                                             Pakai
                                         </button>
-                                        {isOpen ? <ChevronUp size={16} color="#059669" /> : <ChevronDown size={16} color="#9CA3AF" />}
+                                        {isOpen ? <ChevronUp size={16} color="var(--primary)" /> : <ChevronDown size={16} color="#9CA3AF" />}
                                     </div>
                                 </button>
                                 {isOpen && (
                                     <div style={{ padding: '0 1rem 1rem', borderTop: '1px solid #F3F4F6' }}>
                                         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '5px', marginBottom: '0.75rem', paddingTop: '0.75rem' }}>
                                             {krr.provinsi.map(p => (
-                                                <span key={p} style={{ backgroundColor: '#ECFDF5', color: '#059669', padding: '2px 8px', borderRadius: '20px', fontSize: '0.65rem', fontWeight: 600 }}>{p}</span>
+                                                <span key={p} style={{ backgroundColor: 'var(--primary-light)', color: 'var(--primary)', padding: '2px 8px', borderRadius: '20px', fontSize: '0.65rem', fontWeight: 600 }}>{p}</span>
                                             ))}
                                         </div>
                                         <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.78rem' }}>
@@ -318,7 +318,7 @@ const KrrPage: React.FC<KrrPageProps> = ({ onNavigate }) => {
                                                     <tr key={i} style={{ borderBottom: '1px solid #F3F4F6' }}>
                                                         <td style={{ padding: '7px 8px', color: '#374151' }}>{item.uraian}</td>
                                                         <td style={{ padding: '7px 8px', textAlign: 'right', color: '#6B7280' }}>{item.persen}%</td>
-                                                        <td style={{ padding: '7px 8px', textAlign: 'right', color: '#047857', fontWeight: 600 }}>
+                                                        <td style={{ padding: '7px 8px', textAlign: 'right', color: 'var(--primary-dark)', fontWeight: 600 }}>
                                                             {fmt(Math.round(krr.biayaPerM2 * item.persen / 100))}
                                                         </td>
                                                     </tr>
@@ -337,7 +337,7 @@ const KrrPage: React.FC<KrrPageProps> = ({ onNavigate }) => {
             <div style={{ position: 'fixed', bottom: 0, left: 0, right: 0, maxWidth: '480px', margin: '0 auto', backgroundColor: 'white', borderTop: '1px solid #E5E7EB', padding: '1rem', zIndex: 50, boxShadow: '0 -4px 16px rgba(0,0,0,0.08)' }}>
                 <button
                     onClick={() => setShowModal(true)}
-                    style={{ width: '100%', padding: '1rem', borderRadius: '30px', background: 'linear-gradient(135deg, #059669, #047857)', color: 'white', border: 'none', fontSize: '1rem', fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', boxShadow: '0 4px 12px rgba(124,58,237,0.35)' }}
+                    style={{ width: '100%', padding: '1rem', borderRadius: '30px', background: 'var(--gradient-primary)', color: 'white', border: 'none', fontSize: '1rem', fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', boxShadow: '0 4px 12px rgba(91,178,74,0.35)' }}
                 >
                     <Wrench size={20} /> Ajukan KRR Sekarang
                 </button>
@@ -363,12 +363,12 @@ const KrrPage: React.FC<KrrPageProps> = ({ onNavigate }) => {
                         </p>
                         <div style={{ backgroundColor: '#F9FAFB', borderRadius: '12px', padding: '1rem', marginBottom: '1.25rem' }}>
                             <p style={{ fontSize: '0.8rem', color: '#374151', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '8px', margin: 0 }}>
-                                <Phone size={15} color="#059669" /> Call Center BP Tapera
+                                <Phone size={15} color="var(--primary)" /> Call Center BP Tapera
                             </p>
                             <p style={{ fontSize: '1.25rem', fontWeight: 800, color: '#111827', margin: '4px 0 0' }}>1500 662</p>
                             <p style={{ fontSize: '0.72rem', color: '#6B7280', marginTop: '2px' }}>Senin – Jumat, 08.00 – 17.00 WIB</p>
                         </div>
-                        <a href="tel:1500662" style={{ display: 'block', textAlign: 'center', width: '100%', padding: '0.875rem', borderRadius: '30px', background: 'linear-gradient(135deg, #059669, #047857)', color: 'white', fontWeight: 700, fontSize: '0.95rem', textDecoration: 'none' }}>
+                        <a href="tel:1500662" style={{ display: 'block', textAlign: 'center', width: '100%', padding: '0.875rem', borderRadius: '30px', background: 'var(--gradient-primary)', color: 'white', fontWeight: 700, fontSize: '0.95rem', textDecoration: 'none' }}>
                             Hubungi Sekarang
                         </a>
                         <button onClick={() => setShowModal(false)} style={{ marginTop: '0.75rem', width: '100%', padding: '0.875rem', borderRadius: '30px', border: '1.5px solid #E5E7EB', background: 'none', fontWeight: 600, fontSize: '0.9rem', color: '#6B7280', cursor: 'pointer' }}>

@@ -11,7 +11,7 @@ const Step4_Konfirmasi: React.FC<Step4Props> = ({ onNext }) => {
     return (
         <div style={{ padding: '1.5rem' }}>
             <div style={{
-                background: 'linear-gradient(135deg, #2563EB, #00C853)',
+                background: 'var(--gradient-primary)',
                 borderRadius: '16px', padding: '1.5rem', textAlign: 'center',
                 color: 'white', marginBottom: '1.5rem'
             }}>

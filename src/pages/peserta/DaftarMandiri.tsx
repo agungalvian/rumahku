@@ -53,7 +53,7 @@ const DaftarMandiri: React.FC<{ onNavigate: (page: string) => void }> = ({ onNav
 
     return (
         <div style={{ minHeight: '100vh', backgroundColor: '#F3F4F6' }}>
-            <div style={{ backgroundColor: '#2563EB', padding: '1rem', color: 'white', display: 'flex', alignItems: 'center', gap: '1rem' }}>
+            <div style={{ backgroundColor: 'var(--primary)', padding: '1rem', color: 'white', display: 'flex', alignItems: 'center', gap: '1rem' }}>
                 <button onClick={() => step === 1 ? onNavigate('peserta') : setStep(step - 1)} style={{ color: 'white', border: 'none', background: 'none' }}>
                     <ChevronLeft size={24} />
                 </button>
@@ -65,10 +65,10 @@ const DaftarMandiri: React.FC<{ onNavigate: (page: string) => void }> = ({ onNav
                 <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '2rem' }}>
                     {[1, 2, 3].map((s) => (
                         <div key={s} style={{ display: 'flex', alignItems: 'center' }}>
-                            <div style={{ width: '28px', height: '28px', borderRadius: '50%', backgroundColor: step >= s ? '#2563EB' : '#E5E7EB', color: step >= s ? 'white' : '#9CA3AF', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.85rem', fontWeight: 600 }}>
+                            <div style={{ width: '28px', height: '28px', borderRadius: '50%', backgroundColor: step >= s ? 'var(--primary)' : '#E5E7EB', color: step >= s ? 'white' : '#9CA3AF', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.85rem', fontWeight: 600 }}>
                                 {s}
                             </div>
-                            {s < 3 && <div style={{ width: '40px', height: '2px', backgroundColor: step > s ? '#2563EB' : '#E5E7EB', margin: '0 8px' }} />}
+                            {s < 3 && <div style={{ width: '40px', height: '2px', backgroundColor: step > s ? 'var(--primary)' : '#E5E7EB', margin: '0 8px' }} />}
                         </div>
                     ))}
                 </div>
@@ -107,7 +107,7 @@ const DaftarMandiri: React.FC<{ onNavigate: (page: string) => void }> = ({ onNav
                         <button
                             onClick={() => setStep(2)}
                             disabled={!form.nik || !form.nama_lengkap}
-                            style={{ width: '100%', padding: '0.875rem', borderRadius: '12px', backgroundColor: '#2563EB', color: 'white', fontWeight: 600, fontSize: '1rem', border: 'none', marginTop: '1.5rem' }}
+                            style={{ width: '100%', padding: '0.875rem', borderRadius: '12px', backgroundColor: 'var(--primary)', color: 'white', fontWeight: 600, fontSize: '1rem', border: 'none', marginTop: '1.5rem' }}
                         >
                             Lanjutkan
                         </button>
@@ -152,7 +152,7 @@ const DaftarMandiri: React.FC<{ onNavigate: (page: string) => void }> = ({ onNav
                             </div>
                         </div>
 
-                        <div style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', marginTop: '1.5rem', padding: '1rem', backgroundColor: '#EFF6FF', borderRadius: '12px', border: '1px solid #BFDBFE' }}>
+                        <div style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', marginTop: '1.5rem', padding: '1rem', backgroundColor: 'var(--primary-light)', borderRadius: '12px', border: '1px solid var(--primary)' }}>
                             <input
                                 type="checkbox"
                                 id="agree"
@@ -160,7 +160,7 @@ const DaftarMandiri: React.FC<{ onNavigate: (page: string) => void }> = ({ onNav
                                 onChange={(e) => setForm({ ...form, agree: e.target.checked })}
                                 style={{ marginTop: '2px', width: '18px', height: '18px' }}
                             />
-                            <label htmlFor="agree" style={{ fontSize: '0.75rem', lineHeight: 1.5, color: '#1E40AF', flex: 1 }}>
+                            <label htmlFor="agree" style={{ fontSize: '0.75rem', lineHeight: 1.5, color: 'var(--primary-dark)', flex: 1 }}>
                                 Saya menyetujui Syarat dan Ketentuan pendaftaran tabungan reguler secara mandiri dan bersedia iurannya ditarik dari rekening secara autodebet.
                             </label>
                         </div>
@@ -170,7 +170,7 @@ const DaftarMandiri: React.FC<{ onNavigate: (page: string) => void }> = ({ onNav
                         <button
                             onClick={submitPendaftaran}
                             disabled={loading || !form.agree}
-                            style={{ width: '100%', padding: '0.875rem', borderRadius: '12px', backgroundColor: form.agree ? '#2563EB' : '#9CA3AF', color: 'white', fontWeight: 600, fontSize: '1rem', border: 'none', marginTop: '1.5rem' }}
+                            style={{ width: '100%', padding: '0.875rem', borderRadius: '12px', backgroundColor: form.agree ? 'var(--primary)' : '#9CA3AF', color: 'white', fontWeight: 600, fontSize: '1rem', border: 'none', marginTop: '1.5rem' }}
                         >
                             {loading ? 'Memproses...' : 'Daftar Sekarang'}
                         </button>
@@ -189,7 +189,7 @@ const DaftarMandiri: React.FC<{ onNavigate: (page: string) => void }> = ({ onNav
 
                         <button
                             onClick={() => onNavigate('peserta')}
-                            style={{ width: '100%', padding: '0.875rem', borderRadius: '12px', backgroundColor: '#2563EB', color: 'white', fontWeight: 600, fontSize: '1rem', border: 'none' }}
+                            style={{ width: '100%', padding: '0.875rem', borderRadius: '12px', backgroundColor: 'var(--primary)', color: 'white', fontWeight: 600, fontSize: '1rem', border: 'none' }}
                         >
                             Ke Dashboard Peserta
                         </button>

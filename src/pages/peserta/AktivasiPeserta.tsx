@@ -72,7 +72,7 @@ const AktivasiPeserta: React.FC<{ onNavigate: (page: string) => void }> = ({ onN
 
     return (
         <div style={{ minHeight: '100vh', backgroundColor: '#F3F4F6' }}>
-            <div style={{ backgroundColor: '#2563EB', padding: '1rem', color: 'white', display: 'flex', alignItems: 'center', gap: '1rem' }}>
+            <div style={{ backgroundColor: 'var(--primary)', padding: '1rem', color: 'white', display: 'flex', alignItems: 'center', gap: '1rem' }}>
                 <button onClick={() => step === 1 ? onNavigate('peserta') : setStep(step - 1)} style={{ color: 'white', border: 'none', background: 'none' }}>
                     <ChevronLeft size={24} />
                 </button>
@@ -84,10 +84,10 @@ const AktivasiPeserta: React.FC<{ onNavigate: (page: string) => void }> = ({ onN
                 <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '2rem' }}>
                     {[1, 2, 3].map((s) => (
                         <div key={s} style={{ display: 'flex', alignItems: 'center' }}>
-                            <div style={{ width: '28px', height: '28px', borderRadius: '50%', backgroundColor: step >= s ? '#2563EB' : '#E5E7EB', color: step >= s ? 'white' : '#9CA3AF', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.85rem', fontWeight: 600 }}>
+                            <div style={{ width: '28px', height: '28px', borderRadius: '50%', backgroundColor: step >= s ? 'var(--primary)' : '#E5E7EB', color: step >= s ? 'white' : '#9CA3AF', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.85rem', fontWeight: 600 }}>
                                 {s}
                             </div>
-                            {s < 3 && <div style={{ width: '40px', height: '2px', backgroundColor: step > s ? '#2563EB' : '#E5E7EB', margin: '0 8px' }} />}
+                            {s < 3 && <div style={{ width: '40px', height: '2px', backgroundColor: step > s ? 'var(--primary)' : '#E5E7EB', margin: '0 8px' }} />}
                         </div>
                     ))}
                 </div>
@@ -113,7 +113,7 @@ const AktivasiPeserta: React.FC<{ onNavigate: (page: string) => void }> = ({ onN
                         <button
                             onClick={checkNik}
                             disabled={loading || nik.length < 16}
-                            style={{ width: '100%', padding: '0.875rem', borderRadius: '12px', backgroundColor: nik.length >= 16 ? '#2563EB' : '#9CA3AF', color: 'white', fontWeight: 600, fontSize: '1rem', border: 'none' }}
+                            style={{ width: '100%', padding: '0.875rem', borderRadius: '12px', backgroundColor: nik.length >= 16 ? 'var(--primary)' : '#9CA3AF', color: 'white', fontWeight: 600, fontSize: '1rem', border: 'none' }}
                         >
                             {loading ? 'Mengecek...' : 'Cek NIK'}
                         </button>
@@ -165,7 +165,7 @@ const AktivasiPeserta: React.FC<{ onNavigate: (page: string) => void }> = ({ onN
                         <button
                             onClick={submitAktivasi}
                             disabled={loading}
-                            style={{ width: '100%', padding: '0.875rem', borderRadius: '12px', backgroundColor: '#2563EB', color: 'white', fontWeight: 600, fontSize: '1rem', border: 'none' }}
+                            style={{ width: '100%', padding: '0.875rem', borderRadius: '12px', backgroundColor: 'var(--primary)', color: 'white', fontWeight: 600, fontSize: '1rem', border: 'none' }}
                         >
                             {loading ? 'Memproses...' : 'Aktivasi Sekarang'}
                         </button>
@@ -184,7 +184,7 @@ const AktivasiPeserta: React.FC<{ onNavigate: (page: string) => void }> = ({ onN
 
                         <button
                             onClick={() => onNavigate('peserta')}
-                            style={{ width: '100%', padding: '0.875rem', borderRadius: '12px', backgroundColor: '#2563EB', color: 'white', fontWeight: 600, fontSize: '1rem', border: 'none' }}
+                            style={{ width: '100%', padding: '0.875rem', borderRadius: '12px', backgroundColor: 'var(--primary)', color: 'white', fontWeight: 600, fontSize: '1rem', border: 'none' }}
                         >
                             Ke Dashboard Peserta
                         </button>

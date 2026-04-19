@@ -83,8 +83,8 @@ const KprFlowPage: React.FC<KprFlowPageProps> = ({ onNavigate }) => {
                     </div>
                     {/* Tapera badge */}
                     <div style={{ display: 'flex', alignItems: 'center', gap: '5px', flexShrink: 0 }}>
-                        <img src="/logo.png" alt="BP Tapera" style={{ height: '28px' }} />
-                        <span style={{ fontSize: '0.7rem', fontWeight: 700, color: 'var(--primary)' }}>BP Tapera</span>
+                        <img src="/logo.png" alt="Rumahku" style={{ height: '28px' }} />
+                        <span style={{ fontSize: '0.7rem', fontWeight: 700, color: 'var(--primary)' }}>Rumahku</span>
                     </div>
                 </div>
 

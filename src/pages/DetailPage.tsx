@@ -162,7 +162,7 @@ const DetailPage: React.FC<DetailPageProps> = ({ propertyId, onNavigate, onStart
                         <p className="text-muted text-sm flex items-center gap-1"><MapPin size={14} /> {property.location}</p>
                     </div>
                     {property.type === 'Subsidi' && (
-                        <img src="/logo.png" alt="BP Tapera" style={{ height: '36px' }} />
+                        <img src="/logo.png" alt="Rumahku" style={{ height: '36px' }} />
                     )}
                 </div>
 
@@ -202,7 +202,7 @@ const DetailPage: React.FC<DetailPageProps> = ({ propertyId, onNavigate, onStart
                                                 backgroundColor: '#F0FDF4', borderRadius: '10px',
                                                 padding: '10px 12px', fontSize: '0.8rem',
                                             }}>
-                                                <ShieldCheck size={14} color="#2563EB" style={{ flexShrink: 0, marginTop: '2px' }} />
+                                                <ShieldCheck size={14} color="var(--primary)" style={{ flexShrink: 0, marginTop: '2px' }} />
                                                 <div>
                                                     <div style={{ fontWeight: 700, color: '#111827' }}>{label}</div>
                                                     {value && <div style={{ color: '#4B5563', marginTop: '2px' }}>{value}</div>}
@@ -221,7 +221,7 @@ const DetailPage: React.FC<DetailPageProps> = ({ propertyId, onNavigate, onStart
                     <ul className="mb-6 flex flex-wrap gap-2">
                         {property.features.map((feat, idx) => (
                             <li key={idx} style={{ backgroundColor: '#EFF6FF', borderRadius: '9999px', padding: '4px 12px', fontSize: '13px', display: 'flex', alignItems: 'center', gap: '6px', fontWeight: 500 }}>
-                                <ShieldCheck size={13} color="#2563EB" /> {feat}
+                                <ShieldCheck size={13} color="var(--primary)" /> {feat}
                             </li>
                         ))}
                     </ul>

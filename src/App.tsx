@@ -158,7 +158,7 @@ function App() {
         <div style={{
           position: 'fixed', bottom: isTab ? '68px' : '0', left: '50%', transform: 'translateX(-50%)',
           width: '100%', maxWidth: '480px', zIndex: 200,
-          backgroundColor: '#2563EB', color: 'white',
+          backgroundColor: 'var(--primary)', color: 'white',
           display: 'flex', alignItems: 'center', justifyContent: 'space-between',
           padding: '0.75rem 1rem',
           boxShadow: '0 -2px 12px rgba(0,0,0,0.15)',
@@ -168,7 +168,7 @@ function App() {
             onClick={() => updateSW()}
             style={{
               display: 'flex', alignItems: 'center', gap: '6px',
-              backgroundColor: 'white', color: '#2563EB',
+              backgroundColor: 'white', color: 'var(--primary)',
               padding: '6px 14px', borderRadius: '20px',
               fontSize: '0.8rem', fontWeight: 700, border: 'none',
             }}

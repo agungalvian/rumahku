@@ -1,9 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
 :root {
-  --primary: #2563EB;
-  --primary-dark: #1D4ED8;
-  --primary-light: #EFF6FF;
+  --primary: #5bb24a;
+  --primary-dark: #4a913d;
+  --primary-light: #eef7ed;
   --secondary: #10B981;
   --secondary-light: #D1FAE5;
   --bg-color: #F3F4F6;
@@ -14,7 +14,11 @@
   --danger: #EF4444;
   --warning: #F59E0B;
 
-  --tapera: #2563EB;
+  --accent: #df9b27;
+  --accent-light: #fdf6e9;
+  --gradient-primary: linear-gradient(135deg, #5bb24a 0%, #5bb24a 60%, #df9b27 100%);
+
+  --tapera: var(--primary);
   /* BP Tapera brand green */
 
   --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);

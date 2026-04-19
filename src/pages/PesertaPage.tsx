@@ -47,9 +47,9 @@ const PesertaPage: React.FC<{ onNavigate: (path: string) => void }> = ({ onNavig
     if (!isLoggedIn || !pesertaData) {
         return (
             <div style={{ minHeight: '100vh', backgroundColor: '#F3F4F6' }}>
-                <div style={{ backgroundColor: '#2563EB', padding: '1rem', color: 'white', display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                <div style={{ backgroundColor: 'var(--primary)', padding: '1rem', color: 'white', display: 'flex', alignItems: 'center', gap: '1rem' }}>
                     <button onClick={() => onNavigate('home')} style={{ color: 'white' }}><ChevronLeft size={24} /></button>
-                    <h1 style={{ fontSize: '1.2rem', fontWeight: 700, margin: 0 }}>Peserta Tapera</h1>
+                    <h1 style={{ fontSize: '1.2rem', fontWeight: 700, margin: 0 }}>Peserta Rumahku</h1>
                 </div>
 
                 <div style={{ padding: '1rem', marginTop: '2rem', textAlign: 'center' }}>
@@ -65,7 +65,7 @@ const PesertaPage: React.FC<{ onNavigate: (path: string) => void }> = ({ onNavig
 
     return (
         <div style={{ minHeight: '100vh', backgroundColor: '#F3F4F6', paddingBottom: '90px' }}>
-            <div style={{ backgroundColor: '#2563EB', padding: '1rem', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingBottom: '3rem' }}>
+            <div style={{ backgroundColor: 'var(--primary)', padding: '1rem', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingBottom: '3rem' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
                     <button onClick={() => onNavigate('home')} style={{ color: 'white' }}><ChevronLeft size={24} /></button>
                     <h1 style={{ fontSize: '1.1rem', fontWeight: 700, margin: 0 }}>Dashboard Peserta</h1>
@@ -96,7 +96,7 @@ const PesertaPage: React.FC<{ onNavigate: (path: string) => void }> = ({ onNavig
 
                                 {!isMandiri ? (
                                     <p style={{ fontSize: '0.85rem', color: '#6B7280', marginTop: '4px', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                                        <span style={{ display: 'inline-block', width: '6px', height: '6px', backgroundColor: '#2563EB', borderRadius: '50%' }} />
+                                        <span style={{ display: 'inline-block', width: '6px', height: '6px', backgroundColor: 'var(--primary)', borderRadius: '50%' }} />
                                         {pesertaData.instansi || '-'}
                                     </p>
                                 ) : (
@@ -107,7 +107,7 @@ const PesertaPage: React.FC<{ onNavigate: (path: string) => void }> = ({ onNavig
                                 )}
 
                                 {/* JENIS KEPESERTAAN BADGE */}
-                                <div style={{ position: 'absolute', bottom: 0, right: 0, backgroundColor: isMandiri ? '#FEF3C7' : '#DBEAFE', color: isMandiri ? '#D97706' : '#1D4ED8', padding: '4px 8px', borderRadius: '4px', fontSize: '0.65rem', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '4px' }}>
+                                <div style={{ position: 'absolute', bottom: 0, right: 0, backgroundColor: isMandiri ? '#FEF3C7' : 'var(--primary-light)', color: isMandiri ? '#D97706' : 'var(--primary-dark)', padding: '4px 8px', borderRadius: '4px', fontSize: '0.65rem', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '4px' }}>
                                     {isMandiri ? 'PESERTA PEKERJA MANDIRI' : 'PESERTA'}
                                 </div>
                             </div>
@@ -117,7 +117,7 @@ const PesertaPage: React.FC<{ onNavigate: (path: string) => void }> = ({ onNavig
 
                 {isBukanPeserta && (
                     <div style={{ backgroundColor: 'white', padding: '1.5rem', borderRadius: '16px', textAlign: 'center', boxShadow: '0 4px 12px rgba(0,0,0,0.05)', marginBottom: '1.5rem' }}>
-                        <ShieldAlert size={48} color="#2563EB" style={{ margin: '0 auto 1rem' }} />
+                        <ShieldAlert size={48} color="var(--primary)" style={{ margin: '0 auto 1rem' }} />
                         <h2 style={{ fontSize: '1.1rem', fontWeight: 700, color: '#1F2937', marginBottom: '0.5rem' }}>Anda Belum Menjadi Peserta</h2>
                         <p style={{ fontSize: '0.85rem', color: '#6B7280', marginBottom: '1.5rem', lineHeight: 1.5 }}>
                             Akun digital Anda telah aktif. Silakan lakukan pendaftaran kepesertaan untuk mengakses layanan utuh Peserta BP Tapera.
@@ -127,7 +127,7 @@ const PesertaPage: React.FC<{ onNavigate: (path: string) => void }> = ({ onNavig
                             <button
                                 onClick={() => onNavigate('daftar-mandiri')}
                                 style={{
-                                    backgroundColor: '#2563EB', color: 'white', padding: '1rem', borderRadius: '12px',
+                                    backgroundColor: 'var(--primary)', color: 'white', padding: '1rem', borderRadius: '12px',
                                     fontWeight: 600, fontSize: '0.9rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', border: 'none', cursor: 'pointer'
                                 }}
                             >
@@ -141,8 +141,8 @@ const PesertaPage: React.FC<{ onNavigate: (path: string) => void }> = ({ onNavig
                             <button
                                 onClick={() => onNavigate('aktivasi-peserta')}
                                 style={{
-                                    backgroundColor: 'white', color: '#2563EB', padding: '1rem', borderRadius: '12px',
-                                    fontWeight: 600, fontSize: '0.9rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', border: '1px solid #2563EB', cursor: 'pointer'
+                                    backgroundColor: 'white', color: 'var(--primary)', padding: '1rem', borderRadius: '12px',
+                                    fontWeight: 600, fontSize: '0.9rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', border: '1px solid var(--primary)', cursor: 'pointer'
                                 }}
                             >
                                 <span style={{ textAlign: 'left' }}>
@@ -160,11 +160,11 @@ const PesertaPage: React.FC<{ onNavigate: (path: string) => void }> = ({ onNavig
                     <div style={{ backgroundColor: 'white', borderRadius: '16px', padding: '1.25rem', boxShadow: '0 2px 10px rgba(0,0,0,0.05)', marginBottom: '1.5rem' }}>
                         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
                             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#6B7280', fontSize: '0.9rem' }}>
-                                <Wallet size={18} color="#2563EB" /> Saldo Tabungan Anda
+                                <Wallet size={18} color="var(--primary)" /> Saldo Tabungan Anda
                             </div>
                             <button
                                 onClick={() => setShowSaldo(!showSaldo)}
-                                style={{ fontSize: '0.75rem', fontWeight: 600, color: '#2563EB', backgroundColor: '#EFF6FF', padding: '4px 10px', borderRadius: '12px' }}
+                                style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--primary)', backgroundColor: 'var(--primary-light)', padding: '4px 10px', borderRadius: '12px' }}
                             >
                                 {showSaldo ? 'Sembunyikan' : 'Tampilkan'}
                             </button>

@@ -79,9 +79,9 @@ const Step3_BuatAkun: React.FC<Step3Props> = ({ onNext }) => {
                         <div key={idx} style={{ flex: 1, textAlign: 'center' }}>
                             <div style={{
                                 height: '4px', borderRadius: '2px', marginBottom: '4px',
-                                backgroundColor: isDone || isActive ? '#2563EB' : '#E5E7EB'
+                                backgroundColor: isDone || isActive ? 'var(--primary)' : '#E5E7EB'
                             }} />
-                            <span style={{ fontSize: '0.65rem', color: isActive ? '#2563EB' : '#6B7280', fontWeight: isActive ? 700 : 400 }}>
+                            <span style={{ fontSize: '0.65rem', color: isActive ? 'var(--primary)' : '#6B7280', fontWeight: isActive ? 700 : 400 }}>
                                 {label}
                             </span>
                         </div>
@@ -116,7 +116,7 @@ const Step3_BuatAkun: React.FC<Step3Props> = ({ onNext }) => {
                         <p style={{ fontStyle: 'italic' }}>Scroll ke bawah untuk membaca seluruh perjanjian ini.</p>
                     </div>
                     <label style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginTop: '1rem', cursor: 'pointer' }}>
-                        <input type="checkbox" checked={agreed} onChange={e => setAgreed(e.target.checked)} style={{ width: 20, height: 20, accentColor: '#2563EB' }} />
+                        <input type="checkbox" checked={agreed} onChange={e => setAgreed(e.target.checked)} style={{ width: 20, height: 20, accentColor: 'var(--primary)' }} />
                         <span style={{ fontSize: '0.875rem', fontWeight: 500 }}>Saya telah membaca dan menyetujui Syarat & Ketentuan</span>
                     </label>
                     <button
@@ -158,7 +158,7 @@ const Step3_BuatAkun: React.FC<Step3Props> = ({ onNext }) => {
                                         disabled={!phone || phone.length < 10 || showOtpInput}
                                         style={{
                                             padding: '0 1rem', borderRadius: '10px', fontSize: '0.75rem', fontWeight: 700,
-                                            backgroundColor: (phone && phone.length >= 10 && !showOtpInput) ? '#2563EB' : '#E5E7EB',
+                                            backgroundColor: (phone && phone.length >= 10 && !showOtpInput) ? 'var(--primary)' : '#E5E7EB',
                                             color: 'white', border: 'none', cursor: 'pointer'
                                         }}
                                     >
@@ -190,7 +190,7 @@ const Step3_BuatAkun: React.FC<Step3Props> = ({ onNext }) => {
                                             onChange={e => handleOtpChange(idx, e.target.value)}
                                             style={{
                                                 width: '40px', height: '48px', textAlign: 'center', fontSize: '1.2rem',
-                                                fontWeight: 700, borderRadius: '8px', border: `1.5px solid ${digit ? '#2563EB' : '#D1D5DB'}`,
+                                                fontWeight: 700, borderRadius: '8px', border: `1.5px solid ${digit ? 'var(--primary)' : '#D1D5DB'}`,
                                                 outline: 'none', backgroundColor: 'white'
                                             }}
                                         />
@@ -199,7 +199,7 @@ const Step3_BuatAkun: React.FC<Step3Props> = ({ onNext }) => {
                                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                                     <button
                                         onClick={handleSendOtp}
-                                        style={{ background: 'none', border: 'none', color: '#2563EB', fontSize: '0.7rem', fontWeight: 600, padding: 0 }}
+                                        style={{ background: 'none', border: 'none', color: 'var(--primary)', fontSize: '0.7rem', fontWeight: 600, padding: 0 }}
                                     >
                                         Kirim Ulang
                                     </button>
@@ -208,7 +208,7 @@ const Step3_BuatAkun: React.FC<Step3Props> = ({ onNext }) => {
                                         disabled={otp.join('').length !== 6 || isVerifyingOtp}
                                         style={{
                                             padding: '6px 16px', borderRadius: '8px', fontSize: '0.75rem', fontWeight: 700,
-                                            backgroundColor: (otp.join('').length === 6 && !isVerifyingOtp) ? '#2563EB' : '#E5E7EB',
+                                            backgroundColor: (otp.join('').length === 6 && !isVerifyingOtp) ? 'var(--primary)' : '#E5E7EB',
                                             color: 'white', border: 'none', display: 'flex', alignItems: 'center', gap: '6px'
                                         }}
                                     >
@@ -230,10 +230,10 @@ const Step3_BuatAkun: React.FC<Step3Props> = ({ onNext }) => {
                                     onClick={item.done ? undefined : item.onMock}
                                     style={{
                                         width: '100%', padding: '1.25rem', borderRadius: '12px', cursor: 'pointer',
-                                        border: `2px dashed ${item.done ? '#2563EB' : '#D1D5DB'}`,
+                                        border: `2px dashed ${item.done ? 'var(--primary)' : '#D1D5DB'}`,
                                         backgroundColor: item.done ? '#F0FDF4' : 'white',
                                         display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem',
-                                        color: item.done ? '#2563EB' : '#6B7280', fontWeight: 600
+                                        color: item.done ? 'var(--primary)' : '#6B7280', fontWeight: 600
                                     }}
                                 >
                                     {item.done ? <><CheckCircle2 size={18} /> Berhasil Diunggah</> : <><item.icon size={18} /> Klik untuk Unggah</>}
@@ -288,7 +288,7 @@ const Step3_BuatAkun: React.FC<Step3Props> = ({ onNext }) => {
                         className="btn btn-block"
                         style={{
                             marginTop: '1.5rem', padding: '1rem', borderRadius: '14px',
-                            backgroundColor: '#2563EB', color: 'white', fontWeight: 700,
+                            backgroundColor: 'var(--primary)', color: 'white', fontWeight: 700,
                             opacity: password && confirmPass ? 1 : 0.6
                         }}
                         disabled={!password || !confirmPass}

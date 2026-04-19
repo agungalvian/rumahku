@@ -12,7 +12,7 @@ const SimulasiPage: React.FC = () => {
     return (
         <div style={{ paddingBottom: '80px', backgroundColor: 'var(--bg-color)', minHeight: '100vh' }}>
             {/* Header */}
-            <div style={{ padding: '1.25rem 1rem 1rem', backgroundColor: '#2563EB', borderBottom: '1px solid #1D4ED8' }}>
+            <div style={{ padding: '1.25rem 1rem 1rem', backgroundColor: 'var(--primary)', borderBottom: '1px solid var(--primary-dark)' }}>
                 <h1 style={{ fontWeight: 700, fontSize: '1.2rem', color: 'white' }}>Simulasi KPR</h1>
                 <p style={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.8)', marginTop: '2px' }}>
                     Hitung estimasi cicilan dan biaya pembiayaan

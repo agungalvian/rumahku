@@ -34,7 +34,7 @@ const mockDatabase: Record<string, StatusResult> = {
         noKlaim: 'EKL-2024-00287',
         tglPengajuan: '02 Mar 2024',
         tglEstimasi: '02 Apr 2024',
-        keterangan: 'Dokumen sedang diverifikasi oleh tim BP Tapera.',
+        keterangan: 'Dokumen sedang diverifikasi oleh tim Rumahku.',
     },
     '199001052015041002': {
         nama: 'AHMAD FAUZI',
@@ -75,7 +75,7 @@ const statusConfig = {
     },
     verifikasi: {
         label: 'Menunggu Verifikasi',
-        color: '#2563EB',
+        color: 'var(--primary)',
         bg: '#EFF6FF',
         border: '#BFDBFE',
         Icon: AlertCircle,
@@ -130,7 +130,7 @@ const EklaimPage: React.FC<EklaimPageProps> = ({ onNavigate }) => {
         <div style={{ minHeight: '100vh', backgroundColor: '#F3F4F6', paddingBottom: '32px' }}>
 
             {/* Header */}
-            <div style={{ background: 'linear-gradient(135deg, #0EA5E9 0%, #0284C7 100%)', padding: '1rem' }}>
+            <div style={{ background: 'var(--primary)', padding: '1rem' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '1.25rem' }}>
                     <button
                         onClick={() => onNavigate('home')}
@@ -139,7 +139,7 @@ const EklaimPage: React.FC<EklaimPageProps> = ({ onNavigate }) => {
                         <ArrowLeft size={20} color="white" />
                     </button>
                     <div>
-                        <h1 style={{ color: 'white', fontWeight: 800, fontSize: '1.1rem', margin: 0 }}>E-Klaim Tapera</h1>
+                        <h1 style={{ color: 'white', fontWeight: 800, fontSize: '1.1rem', margin: 0 }}>E-Klaim Rumahku</h1>
                         <p style={{ color: 'rgba(255,255,255,0.8)', fontSize: '0.75rem', margin: 0 }}>Cek Status Pengembalian Tabungan</p>
                     </div>
                 </div>
@@ -154,8 +154,8 @@ const EklaimPage: React.FC<EklaimPageProps> = ({ onNavigate }) => {
 
                 {/* Form Card */}
                 <div style={{ backgroundColor: 'white', borderRadius: '16px', padding: '1.25rem', boxShadow: '0 2px 12px rgba(14,165,233,0.10)', border: '1.5px solid #E0F2FE', marginBottom: '1rem' }}>
-                    <h2 style={{ fontWeight: 700, fontSize: '0.95rem', color: '#0C4A6E', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                        <Search size={17} color="#0EA5E9" /> Form Cek Status
+                    <h2 style={{ fontWeight: 700, fontSize: '0.95rem', color: 'var(--primary-dark)', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <Search size={17} color="var(--primary)" /> Form Cek Status
                     </h2>
 
                     {/* Nama */}
@@ -213,7 +213,7 @@ const EklaimPage: React.FC<EklaimPageProps> = ({ onNavigate }) => {
                                 flex: 1, padding: '0.875rem', borderRadius: '30px',
                                 background: (!nama.trim() || !nip.trim() || loading)
                                     ? '#E5E7EB'
-                                    : 'linear-gradient(135deg, #0EA5E9, #0284C7)',
+                                    : 'var(--primary)',
                                 color: (!nama.trim() || !nip.trim() || loading) ? '#9CA3AF' : 'white',
                                 border: 'none', fontSize: '0.95rem', fontWeight: 700,
                                 cursor: (!nama.trim() || !nip.trim() || loading) ? 'not-allowed' : 'pointer',
@@ -317,7 +317,7 @@ const EklaimPage: React.FC<EklaimPageProps> = ({ onNavigate }) => {
                 {/* Info syarat */}
                 {!submitted && (
                     <div style={{ backgroundColor: 'white', borderRadius: '14px', padding: '1rem', boxShadow: '0 1px 4px rgba(0,0,0,0.06)' }}>
-                        <h3 style={{ fontWeight: 700, fontSize: '0.875rem', color: '#0C4A6E', marginBottom: '0.75rem' }}>Syarat E-Klaim Tapera</h3>
+                        <h3 style={{ fontWeight: 700, fontSize: '0.875rem', color: 'var(--primary-dark)', marginBottom: '0.75rem' }}>Syarat E-Klaim Rumahku</h3>
                         {[
                             'Peserta yang telah memasuki masa pensiun',
                             'Peserta yang mengundurkan diri atau diberhentikan',

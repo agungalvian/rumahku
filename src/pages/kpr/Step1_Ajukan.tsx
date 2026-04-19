@@ -29,19 +29,19 @@ const Step1_Ajukan: React.FC<Step1Props> = ({ onNext }) => {
         <div style={{ display: 'flex', flexDirection: 'column', minHeight: '70vh', padding: '1.5rem' }}>
             {/* Hero */}
             <div style={{
-                background: 'linear-gradient(135deg, #2563EB 0%, #00C853 100%)',
+                background: 'var(--gradient-primary)',
                 borderRadius: '20px',
                 padding: '2rem',
                 textAlign: 'center',
                 color: 'white',
                 marginBottom: '2rem'
             }}>
-                <img src="/logo.png" alt="Tapera" style={{ height: '72px', margin: '0 auto 1rem' }} />
+                <img src="/logo.png" alt="Rumahku" style={{ height: '72px', margin: '0 auto 1rem' }} />
                 <h2 style={{ fontSize: '1.5rem', fontWeight: 700, marginBottom: '0.5rem' }}>
-                    Pembiayaan Perumahan Tapera
+                    Rumahku Pembiayaan
                 </h2>
                 <p style={{ fontSize: '0.875rem', opacity: 0.9, lineHeight: 1.6 }}>
-                    Wujudkan rumah impian Anda dengan program pembiayaan bersubsidi dari BP Tapera
+                    Wujudkan rumah impian Anda dengan program pembiayaan bersubsidi dari Rumahku
                 </p>
             </div>
 

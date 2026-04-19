@@ -13,8 +13,8 @@ const services = [
     { key: 'kpr-flpp', label: 'KPR FLPP', subtitle: 'Kredit Pemilikan Rumah FLPP', Icon: Home },
     { key: 'kbr', label: 'KBR', subtitle: 'Kredit Bangun Rumah', Icon: Hammer },
     { key: 'krr', label: 'KRR', subtitle: 'Kredit Renovasi Rumah', Icon: Wrench },
-    { key: 'refund', label: 'E-Klaim', subtitle: 'Pengembalian Tabungan Tapera', Icon: Wallet },
-    { key: 'kpr-tapera', label: 'KPR TAPERA', subtitle: 'Kredit Pemilikan Rumah Tapera', Icon: Building },
+    { key: 'refund', label: 'E-Klaim', subtitle: 'Pengembalian Tabungan Rumahku', Icon: Wallet },
+    { key: 'kpr-tapera', label: 'KPR TAPERA', subtitle: 'Kredit Pemilikan Rumah Bersubsidi', Icon: Building },
 ];
 
 
@@ -162,7 +162,7 @@ const HomePage: React.FC<HomePageProps> = ({ onNavigate, onStartKpr }) => {
             {/* ── Sticky green header ── */}
             <div style={{
                 position: 'sticky', top: 0, zIndex: 20,
-                background: 'linear-gradient(135deg, #2563EB 0%, #00C853 100%)',
+                background: 'var(--primary)',
                 padding: '0.75rem 1rem 1rem',
             }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
@@ -232,7 +232,7 @@ const HomePage: React.FC<HomePageProps> = ({ onNavigate, onStartKpr }) => {
                             }}
                         >
                             {isLoggedIn
-                                ? <span style={{ fontWeight: 800, fontSize: '0.85rem', color: '#2563EB' }}>{userName.charAt(0).toUpperCase()}</span>
+                                ? <span style={{ fontWeight: 800, fontSize: '0.85rem', color: 'var(--primary)' }}>{userName.charAt(0).toUpperCase()}</span>
                                 : <User size={20} color="white" />}
                         </button>
 
@@ -250,7 +250,7 @@ const HomePage: React.FC<HomePageProps> = ({ onNavigate, onStartKpr }) => {
                                             <div style={{ fontWeight: 700, fontSize: '0.85rem', color: '#111827' }}>{userName}</div>
                                         </div>
                                         <button onClick={() => { onNavigate('profile'); setShowUserMenu(false); }} style={{ width: '100%', padding: '11px 14px', textAlign: 'left', fontSize: '0.85rem', fontWeight: 600, color: '#111827', background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                                            <User size={15} color="#2563EB" /> Profil Saya
+                                            <User size={15} color="var(--primary)" /> Profil Saya
                                         </button>
                                         <button onClick={handleLogoutClick} style={{ width: '100%', padding: '11px 14px', textAlign: 'left', fontSize: '0.85rem', fontWeight: 600, color: '#EF4444', background: 'none', border: 'none', borderTop: '1px solid #F3F4F6', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px' }}>
                                             <LogOut size={15} color="#EF4444" /> Keluar
@@ -259,10 +259,10 @@ const HomePage: React.FC<HomePageProps> = ({ onNavigate, onStartKpr }) => {
                                 ) : (
                                     <>
                                         <button onClick={() => { setLoginMode('daftar'); setShowLoginModal(true); setShowUserMenu(false); }} style={{ width: '100%', padding: '12px 14px', textAlign: 'left', fontSize: '0.85rem', fontWeight: 600, color: '#111827', background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                                            <UserPlus size={15} color="#2563EB" /> Daftar
+                                            <UserPlus size={15} color="var(--primary)" /> Daftar
                                         </button>
-                                        <button onClick={() => { setLoginMode('login'); setShowLoginModal(true); setShowUserMenu(false); }} style={{ width: '100%', padding: '12px 14px', textAlign: 'left', fontSize: '0.85rem', fontWeight: 700, color: '#2563EB', background: '#F0FDF4', border: 'none', borderTop: '1px solid #F3F4F6', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                                            <LogIn size={15} color="#2563EB" /> Login
+                                        <button onClick={() => { setLoginMode('login'); setShowLoginModal(true); setShowUserMenu(false); }} style={{ width: '100%', padding: '12px 14px', textAlign: 'left', fontSize: '0.85rem', fontWeight: 700, color: 'var(--primary)', background: 'var(--primary-light)', border: 'none', borderTop: '1px solid #F3F4F6', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                            <LogIn size={15} color="var(--primary)" /> Login
                                         </button>
                                     </>
                                 )}
@@ -384,24 +384,33 @@ const HomePage: React.FC<HomePageProps> = ({ onNavigate, onStartKpr }) => {
                                 else onStartKpr?.();
                             }}
                             style={{
-                                width: '85px',
-                                display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px',
-                                background: 'linear-gradient(135deg, #d2e4fc 0%, #E0F5E9 100%)',
-                                border: '1px solid #c0d6f9',
-                                borderRadius: '10px',
-                                padding: '10px 4px',
+                                width: '72px',
+                                display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px',
+                                background: 'none',
+                                border: 'none',
+                                padding: '4px 0',
                                 flexShrink: 0,
-                                transition: 'all 0.2s',
+                                transition: 'transform 0.2s',
                                 cursor: 'pointer',
                             }}
                         >
-                            <div style={{ color: '#2563EB', marginBottom: '4px' }}>
-                                <svc.Icon size={20} color="#2563EB" />
+                            <div style={{
+                                width: '56px',
+                                height: '56px',
+                                borderRadius: '50%',
+                                backgroundColor: 'var(--primary-light)',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                marginBottom: '2px',
+                                boxShadow: '0 2px 8px rgba(91,178,74,0.15)'
+                            }}>
+                                <svc.Icon size={28} color="var(--primary)" />
                             </div>
                             <span style={{
-                                fontSize: '0.62rem',
-                                fontWeight: 700,
-                                color: '#111827',
+                                fontSize: '0.68rem',
+                                fontWeight: 600,
+                                color: '#374151',
                                 textAlign: 'center',
                                 lineHeight: 1.2,
                                 height: '2.4em',
@@ -432,7 +441,7 @@ const HomePage: React.FC<HomePageProps> = ({ onNavigate, onStartKpr }) => {
                                 setFilters({});
                                 setUserCoords(null);
                             }}
-                            style={{ fontSize: '0.75rem', color: '#2563EB', fontWeight: 600, background: 'none', border: 'none', display: 'flex', alignItems: 'center', gap: '4px' }}
+                            style={{ fontSize: '0.75rem', color: 'var(--primary)', fontWeight: 600, background: 'none', border: 'none', display: 'flex', alignItems: 'center', gap: '4px' }}
                         >
                             ✕ Hapus Filter
                         </button>
@@ -490,7 +499,7 @@ const HomePage: React.FC<HomePageProps> = ({ onNavigate, onStartKpr }) => {
                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
                                 <h2 style={{ fontWeight: 800, fontSize: '1.1rem', color: '#111827' }}>Notifikasi</h2>
                                 {notifications.length > 0 && (
-                                    <span style={{ fontSize: '0.72rem', backgroundColor: '#2563EB', color: 'white', padding: '2px 10px', borderRadius: '20px', fontWeight: 600 }}>
+                                    <span style={{ fontSize: '0.72rem', backgroundColor: 'var(--primary)', color: 'white', padding: '2px 10px', borderRadius: '20px', fontWeight: 600 }}>
                                         {notifications.length} baru
                                     </span>
                                 )}
@@ -503,8 +512,8 @@ const HomePage: React.FC<HomePageProps> = ({ onNavigate, onStartKpr }) => {
                                     </div>
                                 ) : (
                                     notifications.map((notif, idx) => (
-                                        <div key={idx} style={{ display: 'flex', gap: '12px', padding: '10px 12px', backgroundColor: '#F0FDF4', borderRadius: '10px', borderLeft: '4px solid #2563EB' }}>
-                                            <Mail size={18} color="#2563EB" style={{ flexShrink: 0, marginTop: '2px' }} />
+                                        <div key={idx} style={{ display: 'flex', gap: '12px', padding: '10px 12px', backgroundColor: 'var(--primary-light)', borderRadius: '10px', borderLeft: '4px solid var(--primary)' }}>
+                                            <Mail size={18} color="var(--primary)" style={{ flexShrink: 0, marginTop: '2px' }} />
                                             <div>
                                                 <div style={{ fontWeight: 600, fontSize: '0.85rem', color: '#111827' }}>{typeof notif === 'string' ? notif : notif}</div>
                                             </div>
@@ -565,7 +574,7 @@ const HomePage: React.FC<HomePageProps> = ({ onNavigate, onStartKpr }) => {
 
                             <button
                                 onClick={handleLogin}
-                                style={{ width: '100%', marginTop: '16px', padding: '14px', backgroundColor: '#2563EB', color: 'white', fontWeight: 700, fontSize: '0.95rem', borderRadius: '12px', border: 'none', cursor: 'pointer' }}
+                                style={{ width: '100%', marginTop: '16px', padding: '14px', backgroundColor: 'var(--primary)', color: 'white', fontWeight: 700, fontSize: '0.95rem', borderRadius: '12px', border: 'none', cursor: 'pointer' }}
                             >
                                 {loginMode === 'login' ? 'Masuk' : 'Daftar Sekarang'}
                             </button>
@@ -574,7 +583,7 @@ const HomePage: React.FC<HomePageProps> = ({ onNavigate, onStartKpr }) => {
                                 {loginMode === 'login' ? 'Belum punya akun? ' : 'Sudah punya akun? '}
                                 <button
                                     onClick={() => setLoginMode(m => m === 'login' ? 'daftar' : 'login')}
-                                    style={{ color: '#2563EB', fontWeight: 700, background: 'none', border: 'none', cursor: 'pointer', fontSize: '0.8rem' }}
+                                    style={{ color: 'var(--primary)', fontWeight: 700, background: 'none', border: 'none', cursor: 'pointer', fontSize: '0.8rem' }}
                                 >
                                     {loginMode === 'login' ? 'Daftar' : 'Login'}
                                 </button>
@@ -602,7 +611,7 @@ const HomePage: React.FC<HomePageProps> = ({ onNavigate, onStartKpr }) => {
                             <div style={{ width: '40px', height: '4px', backgroundColor: '#E5E7EB', borderRadius: '2px', margin: '0 auto 1rem' }} />
                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
                                 <h2 style={{ fontSize: '1rem', fontWeight: 800, color: '#111827', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                                    <Bookmark size={18} color="#2563EB" fill="#DBEAFE" />
+                                    <Bookmark size={18} color="var(--primary)" fill="var(--primary-light)" />
                                     Wishlist Saya ({wishlist.length})
                                 </h2>
                                 <button onClick={() => setShowWishlist(false)} style={{ border: 'none', background: '#F3F4F6', borderRadius: '50%', width: '32px', height: '32px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}>
@@ -636,7 +645,7 @@ const HomePage: React.FC<HomePageProps> = ({ onNavigate, onStartKpr }) => {
                                             <div style={{ flex: 1, minWidth: 0 }}>
                                                 <p style={{ fontSize: '0.85rem', fontWeight: 700, color: '#111827', marginBottom: '2px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{prop.title}</p>
                                                 <p style={{ fontSize: '0.72rem', color: '#6B7280', marginBottom: '4px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{prop.location}</p>
-                                                <p style={{ fontSize: '0.85rem', fontWeight: 800, color: '#2563EB' }}>
+                                                <p style={{ fontSize: '0.85rem', fontWeight: 800, color: 'var(--primary)' }}>
                                                     {new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(prop.price)}
                                                 </p>
                                             </div>

@@ -15,7 +15,7 @@ const KonsultasiPage: React.FC = () => {
     return (
         <div style={{ paddingBottom: '80px', backgroundColor: 'var(--bg-color)', minHeight: '100vh' }}>
             {/* Header */}
-            <div style={{ padding: '1.25rem 1rem 1rem', backgroundColor: '#2563EB', borderBottom: '1px solid #1D4ED8' }}>
+            <div style={{ padding: '1.25rem 1rem 1rem', backgroundColor: 'var(--primary)', borderBottom: '1px solid var(--primary-dark)' }}>
                 <h1 style={{ fontWeight: 700, fontSize: '1.2rem', color: 'white' }}>Konsultasi</h1>
                 <p style={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.8)', marginTop: '2px' }}>Bantuan dan informasi seputar KPR Tapera</p>
             </div>
@@ -25,7 +25,7 @@ const KonsultasiPage: React.FC = () => {
                 <h3 style={{ fontWeight: 700, fontSize: '0.95rem', marginTop: '0.5rem' }}>Hubungi Kami</h3>
                 {[
                     { icon: Phone, label: 'Call Center', sub: '1500-101 (08.00 – 17.00 WIB)', color: '#10B981', bg: '#D1FAE5', action: 'Hubungi Sekarang' },
-                    { icon: MessageCircle, label: 'Live Chat', sub: 'Chat dengan agen kami', color: '#2563EB', bg: '#EFF6FF', action: 'Mulai Chat' },
+                    { icon: MessageCircle, label: 'Live Chat', sub: 'Chat dengan agen kami', color: 'var(--primary)', bg: 'var(--primary-light)', action: 'Mulai Chat' },
                     { icon: Mail, label: 'Email', sub: 'pengaduan@bptapera.go.id', color: '#EA580C', bg: '#FFEDD5', action: 'Kirim Email' },
                 ].map((item, idx) => (
                     <div key={idx} style={{

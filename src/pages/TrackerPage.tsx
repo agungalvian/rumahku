@@ -88,9 +88,9 @@ const TrackerPage: React.FC<TrackerPageProps> = ({ onNavigate: _onNavigate, onSt
         fontWeight: 600,
         fontSize: '0.875rem',
         border: 'none',
-        borderBottom: activeTab === tab ? '2px solid #2563EB' : '2px solid transparent',
+        borderBottom: activeTab === tab ? '2px solid var(--primary)' : '2px solid transparent',
         backgroundColor: 'white',
-        color: activeTab === tab ? '#2563EB' : '#6B7280',
+        color: activeTab === tab ? 'var(--primary)' : '#6B7280',
         cursor: 'pointer',
         transition: 'all 0.2s',
     });
@@ -98,7 +98,7 @@ const TrackerPage: React.FC<TrackerPageProps> = ({ onNavigate: _onNavigate, onSt
     return (
         <div style={{ paddingBottom: '80px', backgroundColor: '#F3F4F6', minHeight: '100vh' }}>
             {/* Header + Tabs */}
-            <div style={{ padding: '1rem', backgroundColor: '#2563EB', paddingBottom: '0' }}>
+            <div style={{ padding: '1rem', backgroundColor: 'var(--primary)', paddingBottom: '0' }}>
                 <h1 style={{ color: 'white', fontWeight: 700, fontSize: '1.1rem', marginBottom: '1rem' }}>Riwayat</h1>
                 <div style={{ display: 'flex', backgroundColor: 'white', borderRadius: '12px 12px 0 0', overflow: 'hidden' }}>
                     <button style={tabStyle('pembiayaan')} onClick={() => setActiveTab('pembiayaan')}>
@@ -125,7 +125,7 @@ const TrackerPage: React.FC<TrackerPageProps> = ({ onNavigate: _onNavigate, onSt
 
                         {loadingPengajuan ? (
                             <div style={{ textAlign: 'center', padding: '2rem' }}>
-                                <Loader2 size={28} color="#2563EB" style={{ margin: '0 auto', animation: 'spin 1s linear infinite' }} />
+                                <Loader2 size={28} color="var(--primary)" style={{ margin: '0 auto', animation: 'spin 1s linear infinite' }} />
                             </div>
                         ) : !isLoggedIn ? (
                             <div style={{ textAlign: 'center', padding: '2rem', backgroundColor: 'white', borderRadius: '12px' }}>
@@ -187,18 +187,18 @@ const TrackerPage: React.FC<TrackerPageProps> = ({ onNavigate: _onNavigate, onSt
                                 <Receipt size={48} color="#D1D5DB" style={{ margin: '0 auto 1rem' }} />
                                 <h3 style={{ fontSize: '1rem', fontWeight: 700, color: '#374151', marginBottom: '0.5rem' }}>Belum Menjadi Peserta</h3>
                                 <p style={{ color: '#6B7280', fontSize: '0.85rem', lineHeight: 1.6 }}>
-                                    Riwayat iuran hanya tersedia untuk Peserta aktif BP Tapera.<br />
+                                    Riwayat iuran hanya tersedia untuk Peserta aktif Rumahku.<br />
                                     Daftarkan diri Anda melalui menu Peserta.
                                 </p>
                             </div>
                         ) : loadingIuran ? (
                             <div style={{ textAlign: 'center', padding: '2rem' }}>
-                                <Loader2 size={28} color="#2563EB" style={{ margin: '0 auto', animation: 'spin 1s linear infinite' }} />
+                                <Loader2 size={28} color="var(--primary)" style={{ margin: '0 auto', animation: 'spin 1s linear infinite' }} />
                             </div>
                         ) : (
                             <div>
                                 <div style={{
-                                    background: 'linear-gradient(135deg, #2563EB, #1D4ED8)',
+                                    background: 'var(--gradient-primary)',
                                     borderRadius: '16px', padding: '1.25rem', marginBottom: '1rem',
                                     color: 'white', boxShadow: '0 4px 12px rgba(37,99,235,0.3)'
                                 }}>
@@ -232,7 +232,7 @@ const TrackerPage: React.FC<TrackerPageProps> = ({ onNavigate: _onNavigate, onSt
                                                     <p style={{ fontSize: '0.72rem', color: '#6B7280', marginTop: '2px' }}>{item.tipe}</p>
                                                 </div>
                                                 <div style={{ textAlign: 'right' }}>
-                                                    <p style={{ fontSize: '0.9rem', fontWeight: 700, color: '#2563EB' }}>
+                                                    <p style={{ fontSize: '0.9rem', fontWeight: 700, color: 'var(--primary)' }}>
                                                         {new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(parseFloat(item.nominal))}
                                                     </p>
                                                     <span style={{
@@ -311,7 +311,7 @@ const TrackerPage: React.FC<TrackerPageProps> = ({ onNavigate: _onNavigate, onSt
                                 </div>
                                 <div style={{ marginTop: '0.75rem', paddingTop: '0.75rem', borderTop: '1px solid #E5E7EB' }}>
                                     <p style={{ fontSize: '0.72rem', color: '#9CA3AF', marginBottom: '2px' }}>ID Pengajuan</p>
-                                    <p style={{ fontSize: '0.85rem', fontWeight: 700, color: '#2563EB', fontFamily: 'monospace' }}>{selectedPengajuan.id_pengajuan}</p>
+                                    <p style={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--primary)', fontFamily: 'monospace' }}>{selectedPengajuan.id_pengajuan}</p>
                                 </div>
                             </div>
 
@@ -322,7 +322,7 @@ const TrackerPage: React.FC<TrackerPageProps> = ({ onNavigate: _onNavigate, onSt
                                 <div style={{ backgroundColor: '#FEF2F2', border: '1px solid #FECACA', borderRadius: '12px', padding: '1rem', textAlign: 'center' }}>
                                     <XCircle size={32} color="#DC2626" style={{ margin: '0 auto 0.5rem' }} />
                                     <p style={{ fontSize: '0.85rem', fontWeight: 600, color: '#DC2626' }}>Pengajuan Ditolak</p>
-                                    <p style={{ fontSize: '0.75rem', color: '#9B1C1C', marginTop: '4px' }}>Silakan hubungi kantor BP Tapera terdekat untuk informasi lebih lanjut.</p>
+                                    <p style={{ fontSize: '0.75rem', color: '#9B1C1C', marginTop: '4px' }}>Silakan hubungi kantor Rumahku terdekat untuk informasi lebih lanjut.</p>
                                 </div>
                             )}
                         </div>

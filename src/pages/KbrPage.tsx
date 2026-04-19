@@ -102,7 +102,7 @@ const rabData = [
 const fmt = (n: number) =>
     new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(n);
 
-const COLORS = ['#2563EB', '#0891B2', '#7C3AED', '#059669', '#D97706', '#DC2626'];
+const COLORS = ['var(--primary)', '#0891B2', '#7C3AED', '#059669', '#D97706', '#DC2626'];
 
 const KbrPage: React.FC<KbrPageProps> = ({ onNavigate }) => {
     const [selectedWilayahIdx, setSelectedWilayahIdx] = useState(0);
@@ -119,7 +119,7 @@ const KbrPage: React.FC<KbrPageProps> = ({ onNavigate }) => {
         <div style={{ minHeight: '100vh', backgroundColor: '#F3F4F6', paddingBottom: '100px' }}>
 
             {/* Header */}
-            <div style={{ background: 'linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%)', padding: '1rem' }}>
+            <div style={{ background: 'var(--primary)', padding: '1rem' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '1.25rem' }}>
                     <button
                         onClick={() => onNavigate('home')}
@@ -142,16 +142,16 @@ const KbrPage: React.FC<KbrPageProps> = ({ onNavigate }) => {
             <div style={{ padding: '1rem' }}>
 
                 {/* ── KALKULATOR RAB ──────────────────────────────────────── */}
-                <div style={{ backgroundColor: 'white', borderRadius: '16px', overflow: 'hidden', boxShadow: '0 2px 12px rgba(37,99,235,0.10)', marginBottom: '1rem', border: '1.5px solid #DBEAFE' }}>
+                <div style={{ backgroundColor: 'white', borderRadius: '16px', overflow: 'hidden', boxShadow: '0 2px 12px rgba(91,178,74,0.10)', marginBottom: '1rem', border: '1.5px solid var(--primary-light)' }}>
                     {/* Section toggle header */}
                     <button
                         onClick={() => setShowCalc(v => !v)}
-                        style={{ width: '100%', background: '#EFF6FF', border: 'none', padding: '0.875rem 1rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', cursor: 'pointer' }}
+                        style={{ width: '100%', background: 'var(--primary-light)', border: 'none', padding: '0.875rem 1rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', cursor: 'pointer' }}
                     >
-                        <span style={{ display: 'flex', alignItems: 'center', gap: '8px', fontWeight: 700, color: '#1E40AF', fontSize: '0.9rem' }}>
-                            <Calculator size={18} color="#2563EB" /> Kalkulator RAB
+                        <span style={{ display: 'flex', alignItems: 'center', gap: '8px', fontWeight: 700, color: 'var(--primary-dark)', fontSize: '0.9rem' }}>
+                            <Calculator size={18} color="var(--primary)" /> Kalkulator RAB
                         </span>
-                        {showCalc ? <ChevronUp size={18} color="#2563EB" /> : <ChevronDown size={18} color="#2563EB" />}
+                        {showCalc ? <ChevronUp size={18} color="var(--primary)" /> : <ChevronDown size={18} color="var(--primary)" />}
                     </button>
 
                     {showCalc && (
@@ -171,7 +171,7 @@ const KbrPage: React.FC<KbrPageProps> = ({ onNavigate }) => {
                                 {/* Provinsi chips */}
                                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: '5px', marginTop: '8px' }}>
                                     {selectedRab.provinsi.map(p => (
-                                        <span key={p} style={{ backgroundColor: '#EFF6FF', color: '#2563EB', padding: '2px 8px', borderRadius: '20px', fontSize: '0.65rem', fontWeight: 600 }}>{p}</span>
+                                        <span key={p} style={{ backgroundColor: 'var(--primary-light)', color: 'var(--primary)', padding: '2px 8px', borderRadius: '20px', fontSize: '0.65rem', fontWeight: 600 }}>{p}</span>
                                     ))}
                                 </div>
                             </div>
@@ -188,7 +188,7 @@ const KbrPage: React.FC<KbrPageProps> = ({ onNavigate }) => {
                                         max={500}
                                         value={luas}
                                         onChange={e => setLuas(e.target.value)}
-                                        style={{ flex: 1, padding: '0.65rem', borderRadius: '10px', border: '1.5px solid #2563EB', fontSize: '1.1rem', fontWeight: 700, textAlign: 'center', color: '#111827' }}
+                                        style={{ flex: 1, padding: '0.65rem', borderRadius: '10px', border: '1.5px solid var(--primary)', fontSize: '1.1rem', fontWeight: 700, textAlign: 'center', color: '#111827' }}
                                     />
                                     <button onClick={() => setLuas(v => String((parseFloat(v) || 0) + 1))}
                                         style={{ width: '40px', height: '40px', borderRadius: '10px', border: '1.5px solid #E5E7EB', background: '#F9FAFB', fontSize: '1.2rem', cursor: 'pointer', fontWeight: 700 }}>+</button>
@@ -197,7 +197,7 @@ const KbrPage: React.FC<KbrPageProps> = ({ onNavigate }) => {
                                 <div style={{ display: 'flex', gap: '6px', marginTop: '8px' }}>
                                     {[21, 36, 45, 54, 60, 72].map(l => (
                                         <button key={l} onClick={() => setLuas(String(l))}
-                                            style={{ flex: 1, padding: '5px 0', borderRadius: '8px', border: '1px solid', borderColor: luasNum === l ? '#2563EB' : '#E5E7EB', backgroundColor: luasNum === l ? '#EFF6FF' : '#F9FAFB', color: luasNum === l ? '#2563EB' : '#6B7280', fontSize: '0.72rem', fontWeight: 600, cursor: 'pointer' }}>
+                                            style={{ flex: 1, padding: '5px 0', borderRadius: '8px', border: '1px solid', borderColor: luasNum === l ? 'var(--primary)' : '#E5E7EB', backgroundColor: luasNum === l ? 'var(--primary-light)' : '#F9FAFB', color: luasNum === l ? 'var(--primary)' : '#6B7280', fontSize: '0.72rem', fontWeight: 600, cursor: 'pointer' }}>
                                             {l}
                                         </button>
                                     ))}
@@ -205,7 +205,7 @@ const KbrPage: React.FC<KbrPageProps> = ({ onNavigate }) => {
                             </div>
 
                             {/* Hasil total */}
-                            <div style={{ background: 'linear-gradient(135deg, #2563EB, #1D4ED8)', borderRadius: '14px', padding: '1rem 1.25rem', marginBottom: '1rem', color: 'white' }}>
+                            <div style={{ background: 'var(--gradient-primary)', borderRadius: '14px', padding: '1rem 1.25rem', marginBottom: '1rem', color: 'white' }}>
                                 <p style={{ fontSize: '0.72rem', opacity: 0.8, margin: '0 0 2px' }}>Estimasi Total RAB</p>
                                 <p style={{ fontSize: '1.6rem', fontWeight: 900, margin: 0 }}>{fmt(totalBiaya)}</p>
                                 <p style={{ fontSize: '0.7rem', opacity: 0.75, margin: '4px 0 0' }}>
@@ -250,7 +250,7 @@ const KbrPage: React.FC<KbrPageProps> = ({ onNavigate }) => {
                         'Memiliki lahan yang sah secara hukum',
                     ].map(s => (
                         <div key={s} style={{ display: 'flex', alignItems: 'flex-start', gap: '8px', marginBottom: '6px' }}>
-                            <CheckCircle2 size={15} color="#2563EB" style={{ marginTop: '1px', flexShrink: 0 }} />
+                            <CheckCircle2 size={15} color="var(--primary)" style={{ marginTop: '1px', flexShrink: 0 }} />
                             <p style={{ fontSize: '0.82rem', color: '#374151', margin: 0 }}>{s}</p>
                         </div>
                     ))}
@@ -259,7 +259,7 @@ const KbrPage: React.FC<KbrPageProps> = ({ onNavigate }) => {
                 {/* Standar biaya per wilayah — accordion referensi */}
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.65rem' }}>
                     <h3 style={{ fontWeight: 700, fontSize: '0.9rem', color: '#1F2937', margin: 0 }}>
-                        <FileText size={15} style={{ verticalAlign: 'middle', marginRight: '6px', color: '#2563EB' }} />
+                        <FileText size={15} style={{ verticalAlign: 'middle', marginRight: '6px', color: 'var(--primary)' }} />
                         Standar Biaya per Wilayah
                     </h3>
                 </div>
@@ -267,7 +267,7 @@ const KbrPage: React.FC<KbrPageProps> = ({ onNavigate }) => {
                     {rabData.map((rab, idx) => {
                         const isOpen = expandedIdx === idx;
                         return (
-                            <div key={idx} style={{ backgroundColor: 'white', borderRadius: '12px', overflow: 'hidden', boxShadow: '0 1px 3px rgba(0,0,0,0.05)', border: isOpen ? '2px solid #2563EB' : '2px solid transparent', transition: 'border 0.2s' }}>
+                            <div key={idx} style={{ backgroundColor: 'white', borderRadius: '12px', overflow: 'hidden', boxShadow: '0 1px 3px rgba(0,0,0,0.05)', border: isOpen ? '2px solid var(--primary)' : '2px solid transparent', transition: 'border 0.2s' }}>
                                 <button
                                     onClick={() => setExpandedIdx(isOpen ? null : idx)}
                                     style={{ width: '100%', padding: '0.875rem 1rem', background: 'none', border: 'none', cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
@@ -279,18 +279,18 @@ const KbrPage: React.FC<KbrPageProps> = ({ onNavigate }) => {
                                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                                         <button
                                             onClick={e => { e.stopPropagation(); setSelectedWilayahIdx(idx); setShowCalc(true); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-                                            style={{ padding: '4px 10px', fontSize: '0.68rem', fontWeight: 700, borderRadius: '20px', border: 'none', backgroundColor: '#EFF6FF', color: '#2563EB', cursor: 'pointer' }}
+                                            style={{ padding: '4px 10px', fontSize: '0.68rem', fontWeight: 700, borderRadius: '20px', border: 'none', backgroundColor: 'var(--primary-light)', color: 'var(--primary)', cursor: 'pointer' }}
                                         >
                                             Pakai
                                         </button>
-                                        {isOpen ? <ChevronUp size={16} color="#2563EB" /> : <ChevronDown size={16} color="#9CA3AF" />}
+                                        {isOpen ? <ChevronUp size={16} color="var(--primary)" /> : <ChevronDown size={16} color="#9CA3AF" />}
                                     </div>
                                 </button>
                                 {isOpen && (
                                     <div style={{ padding: '0 1rem 1rem', borderTop: '1px solid #F3F4F6' }}>
                                         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '5px', marginBottom: '0.75rem', paddingTop: '0.75rem' }}>
                                             {rab.provinsi.map(p => (
-                                                <span key={p} style={{ backgroundColor: '#EFF6FF', color: '#2563EB', padding: '2px 8px', borderRadius: '20px', fontSize: '0.65rem', fontWeight: 600 }}>{p}</span>
+                                                <span key={p} style={{ backgroundColor: 'var(--primary-light)', color: 'var(--primary)', padding: '2px 8px', borderRadius: '20px', fontSize: '0.65rem', fontWeight: 600 }}>{p}</span>
                                             ))}
                                         </div>
                                         <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.78rem' }}>
@@ -306,7 +306,7 @@ const KbrPage: React.FC<KbrPageProps> = ({ onNavigate }) => {
                                                     <tr key={i} style={{ borderBottom: '1px solid #F3F4F6' }}>
                                                         <td style={{ padding: '7px 8px', color: '#374151' }}>{item.uraian}</td>
                                                         <td style={{ padding: '7px 8px', textAlign: 'right', color: '#6B7280' }}>{item.persen}%</td>
-                                                        <td style={{ padding: '7px 8px', textAlign: 'right', color: '#1D4ED8', fontWeight: 600 }}>
+                                                        <td style={{ padding: '7px 8px', textAlign: 'right', color: 'var(--primary-dark)', fontWeight: 600 }}>
                                                             {fmt(Math.round(rab.biayaPerM2 * item.persen / 100))}
                                                         </td>
                                                     </tr>
@@ -325,7 +325,7 @@ const KbrPage: React.FC<KbrPageProps> = ({ onNavigate }) => {
             <div style={{ position: 'fixed', bottom: 0, left: 0, right: 0, maxWidth: '480px', margin: '0 auto', backgroundColor: 'white', borderTop: '1px solid #E5E7EB', padding: '1rem', zIndex: 50, boxShadow: '0 -4px 16px rgba(0,0,0,0.08)' }}>
                 <button
                     onClick={() => setShowModal(true)}
-                    style={{ width: '100%', padding: '1rem', borderRadius: '30px', background: 'linear-gradient(135deg, #2563EB, #1D4ED8)', color: 'white', border: 'none', fontSize: '1rem', fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', boxShadow: '0 4px 12px rgba(37,99,235,0.35)' }}
+                    style={{ width: '100%', padding: '1rem', borderRadius: '30px', background: 'var(--gradient-primary)', color: 'white', border: 'none', fontSize: '1rem', fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', boxShadow: '0 4px 12px rgba(91,178,74,0.35)' }}
                 >
                     <Hammer size={20} /> Ajukan KBR Sekarang
                 </button>
@@ -340,8 +340,8 @@ const KbrPage: React.FC<KbrPageProps> = ({ onNavigate }) => {
                         <h2 style={{ fontWeight: 800, fontSize: '1rem', color: '#111827', marginBottom: '0.5rem' }}>Pengajuan KBR</h2>
 
                         {/* Ringkasan estimasi */}
-                        <div style={{ backgroundColor: '#F0F9FF', borderRadius: '12px', padding: '0.875rem 1rem', marginBottom: '1rem' }}>
-                            <p style={{ fontSize: '0.75rem', color: '#0369A1', fontWeight: 600, margin: '0 0 4px' }}>Estimasi RAB Anda</p>
+                        <div style={{ backgroundColor: 'var(--primary-light)', borderRadius: '12px', padding: '0.875rem 1rem', marginBottom: '1rem' }}>
+                            <p style={{ fontSize: '0.75rem', color: 'var(--primary-dark)', fontWeight: 600, margin: '0 0 4px' }}>Estimasi RAB Anda</p>
                             <p style={{ fontSize: '1.1rem', fontWeight: 800, color: '#111827', margin: 0 }}>{fmt(totalBiaya)}</p>
                             <p style={{ fontSize: '0.7rem', color: '#6B7280', margin: '2px 0 0' }}>{luasNum} m² · {selectedRab.wilayah}</p>
                         </div>
@@ -351,12 +351,12 @@ const KbrPage: React.FC<KbrPageProps> = ({ onNavigate }) => {
                         </p>
                         <div style={{ backgroundColor: '#F9FAFB', borderRadius: '12px', padding: '1rem', marginBottom: '1.25rem' }}>
                             <p style={{ fontSize: '0.8rem', color: '#374151', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '8px', margin: 0 }}>
-                                <Phone size={15} color="#2563EB" /> Call Center BP Tapera
+                                <Phone size={15} color="var(--primary)" /> Call Center BP Tapera
                             </p>
                             <p style={{ fontSize: '1.25rem', fontWeight: 800, color: '#111827', margin: '4px 0 0' }}>1500 662</p>
                             <p style={{ fontSize: '0.72rem', color: '#6B7280', marginTop: '2px' }}>Senin – Jumat, 08.00 – 17.00 WIB</p>
                         </div>
-                        <a href="tel:1500662" style={{ display: 'block', textAlign: 'center', width: '100%', padding: '0.875rem', borderRadius: '30px', background: 'linear-gradient(135deg, #2563EB, #1D4ED8)', color: 'white', fontWeight: 700, fontSize: '0.95rem', textDecoration: 'none' }}>
+                        <a href="tel:1500662" style={{ display: 'block', textAlign: 'center', width: '100%', padding: '0.875rem', borderRadius: '30px', background: 'var(--gradient-primary)', color: 'white', fontWeight: 700, fontSize: '0.95rem', textDecoration: 'none' }}>
                             Hubungi Sekarang
                         </a>
                         <button onClick={() => setShowModal(false)} style={{ marginTop: '0.75rem', width: '100%', padding: '0.875rem', borderRadius: '30px', border: '1.5px solid #E5E7EB', background: 'none', fontWeight: 600, fontSize: '0.9rem', color: '#6B7280', cursor: 'pointer' }}>

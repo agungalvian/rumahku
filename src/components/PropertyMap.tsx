@@ -10,7 +10,7 @@ const houseIcon = L.divIcon({
         <div style="
             display:flex; align-items:center; justify-content:center;
             width:40px; height:40px;
-            background: #2563EB;
+            background: #5bb24a;
             border-radius: 50% 50% 50% 0;
             transform: rotate(-45deg);
             box-shadow: 2px 2px 8px rgba(0,0,0,0.3);
@@ -87,7 +87,7 @@ const PropertyMap: React.FC<PropertyMapProps> = ({ lat, lng, title, location }) 
                 rel="noopener noreferrer"
                 style={{
                     position: 'absolute', bottom: '10px', left: '50%', transform: 'translateX(-50%)',
-                    backgroundColor: '#2563EB', color: 'white',
+                    backgroundColor: '#5bb24a', color: 'white',
                     padding: '6px 18px', borderRadius: '20px',
                     fontSize: '0.8rem', fontWeight: 700,
                     boxShadow: '0 2px 8px rgba(0,0,0,0.25)',

@@ -93,9 +93,9 @@ const SearchPage: React.FC<SearchPageProps> = ({ onNavigate }) => {
                         onClick={() => setShowFilters(true)}
                         style={{
                             flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px',
-                            padding: '0.5rem', borderRadius: '8px', border: '1px solid #2563EB',
-                            backgroundColor: (selectedProv || selectedKab) ? '#F0FDF4' : 'white',
-                            color: '#2563EB', fontSize: '0.85rem', fontWeight: 600
+                            padding: '0.5rem', borderRadius: '8px', border: '1px solid var(--primary)',
+                            backgroundColor: (selectedProv || selectedKab) ? 'var(--primary-light)' : 'white',
+                            color: 'var(--primary)', fontSize: '0.85rem', fontWeight: 600
                         }}
                     >
                         <SlidersHorizontal size={16} />
@@ -136,7 +136,7 @@ const SearchPage: React.FC<SearchPageProps> = ({ onNavigate }) => {
                 ) : error ? (
                     <div style={{ padding: '2rem', textAlign: 'center', color: '#EF4444' }}>
                         <p>{error}</p>
-                        <button onClick={handleApplyFilter} style={{ marginTop: '1rem', color: '#2563EB', fontWeight: 600 }}>Coba lagi</button>
+                        <button onClick={handleApplyFilter} style={{ marginTop: '1rem', color: 'var(--primary)', fontWeight: 600 }}>Coba lagi</button>
                     </div>
                 ) : properties.length === 0 ? (
                     <div style={{ padding: '4rem 2rem', textAlign: 'center' }}>
@@ -231,7 +231,7 @@ const SearchPage: React.FC<SearchPageProps> = ({ onNavigate }) => {
                             onClick={handleApplyFilter}
                             style={{
                                 width: '100%', padding: '1rem', borderRadius: '30px',
-                                backgroundColor: '#2563EB', color: 'white', border: 'none',
+                                backgroundColor: 'var(--primary)', color: 'white', border: 'none',
                                 fontSize: '1rem', fontWeight: 700, marginTop: '2rem'
                             }}
                         >

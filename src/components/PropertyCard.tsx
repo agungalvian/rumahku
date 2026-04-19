@@ -73,7 +73,7 @@ const PropertyCard: React.FC<PropertyCardProps> = ({ property, onClick }) => {
                 <p className="flex items-center gap-1 text-sm text-muted mb-2">
                     <MapPin size={14} /> {property.location}
                     {property.distance !== undefined && (
-                        <span style={{ marginLeft: 'auto', fontWeight: 600, color: '#2563EB' }}>
+                        <span style={{ marginLeft: 'auto', fontWeight: 600, color: 'var(--primary)' }}>
                             {property.distance.toFixed(1)} km
                         </span>
                     )}
