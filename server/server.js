@@ -25,6 +25,11 @@ app.get('/api/peserta/health', (req, res) => {
     res.json({ status: 'OK', message: 'Peserta API is running' });
 });
 
+// Root route
+app.get('/', (req, res) => {
+    res.send('Rumahku API is running. Access the web app on port 3300.');
+});
+
 /**
  * 1. Check NIK status
  * Used on the first screen to see if they are a user, pre-registered ASN/Karyawan, or unregistered.

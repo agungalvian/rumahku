@@ -4,7 +4,7 @@ services:
   web:
     build: .
     ports:
-      - "8080:80"
+      - "3300:80"
     restart: always
     depends_on:
       - api

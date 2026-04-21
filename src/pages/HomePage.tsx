@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import PropertyCard from '../components/PropertyCard';
 import { useAppContext } from '../context/AppContext';
 import { useProperties } from '../hooks/useProperties';
-import { Search, MapPin, ChevronRight, Home, Building, Hammer, Wrench, Bookmark, Bell, User, Wallet, LogOut, UserPlus, LogIn, ChevronLeft, RefreshCw, Mail } from 'lucide-react';
+import { Search, MapPin, ChevronRight, Bookmark, Bell, User, LogOut, UserPlus, LogIn, ChevronLeft, RefreshCw, Mail } from 'lucide-react';
 
 interface HomePageProps {
     onNavigate: (page: string, id?: string) => void;
@@ -10,11 +10,11 @@ interface HomePageProps {
 }
 
 const services = [
-    { key: 'kpr-flpp', label: 'KPR FLPP', subtitle: 'Kredit Pemilikan Rumah FLPP', Icon: Home },
-    { key: 'kbr', label: 'KBR', subtitle: 'Kredit Bangun Rumah', Icon: Hammer },
-    { key: 'krr', label: 'KRR', subtitle: 'Kredit Renovasi Rumah', Icon: Wrench },
-    { key: 'refund', label: 'E-Klaim', subtitle: 'Pengembalian Tabungan Rumahku', Icon: Wallet },
-    { key: 'kpr-tapera', label: 'KPR TAPERA', subtitle: 'Kredit Pemilikan Rumah Bersubsidi', Icon: Building },
+    { key: 'kpr-flpp', label: 'KPR FLPP', subtitle: 'Kredit Pemilikan Rumah FLPP', iconPath: '/icons/kpr-flpp.png' },
+    { key: 'kbr', label: 'KBR', subtitle: 'Kredit Bangun Rumah', iconPath: '/icons/kbr.png' },
+    { key: 'krr', label: 'KRR', subtitle: 'Kredit Renovasi Rumah', iconPath: '/icons/krr.png' },
+    { key: 'refund', label: 'E-Klaim', subtitle: 'Pengembalian Tabungan Rumahku', iconPath: '/icons/e-klaim.png' },
+    { key: 'kpr-tapera', label: 'KPR TAPERA', subtitle: 'Kredit Pemilikan Rumah Bersubsidi', iconPath: '/icons/kpr-tapera.png' },
 ];
 
 
@@ -405,7 +405,7 @@ const HomePage: React.FC<HomePageProps> = ({ onNavigate, onStartKpr }) => {
                                 marginBottom: '2px',
                                 boxShadow: '0 2px 8px rgba(91,178,74,0.15)'
                             }}>
-                                <svc.Icon size={28} color="var(--primary)" />
+                                <img src={svc.iconPath} alt={svc.label} style={{ width: '32px', height: '32px', objectFit: 'contain' }} />
                             </div>
                             <span style={{
                                 fontSize: '0.68rem',
