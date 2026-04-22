@@ -194,7 +194,7 @@ const HomePage: React.FC<HomePageProps> = ({ onNavigate, onStartKpr }) => {
                     </div>
                     {[
                         { Icon: Bookmark, badge: wishlist.length, onClick: () => setShowWishlist(true) },
-                        { Icon: Bell, badge: 2, onClick: () => { } }
+                        { Icon: Bell, badge: notifications.length, onClick: () => setShowNotifPanel(true) }
                     ].map(({ Icon, badge, onClick }, i) => (
                         <button
                             key={i}
@@ -498,11 +498,16 @@ const HomePage: React.FC<HomePageProps> = ({ onNavigate, onStartKpr }) => {
                             <div style={{ width: '36px', height: '4px', backgroundColor: '#E5E7EB', borderRadius: '2px', margin: '0 auto 1.25rem' }} />
                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
                                 <h2 style={{ fontWeight: 800, fontSize: '1.1rem', color: '#111827' }}>Notifikasi</h2>
-                                {notifications.length > 0 && (
-                                    <span style={{ fontSize: '0.72rem', backgroundColor: 'var(--primary)', color: 'white', padding: '2px 10px', borderRadius: '20px', fontWeight: 600 }}>
-                                        {notifications.length} baru
-                                    </span>
-                                )}
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                    {notifications.length > 0 && (
+                                        <span style={{ fontSize: '0.72rem', backgroundColor: 'var(--primary)', color: 'white', padding: '2px 10px', borderRadius: '20px', fontWeight: 600 }}>
+                                            {notifications.length} baru
+                                        </span>
+                                    )}
+                                    <button onClick={() => setShowNotifPanel(false)} style={{ border: 'none', background: '#F3F4F6', borderRadius: '50%', width: '32px', height: '32px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}>
+                                        <span style={{ fontSize: '1rem', color: '#6B7280', lineHeight: 1 }}>✕</span>
+                                    </button>
+                                </div>
                             </div>
                             <div style={{ overflowY: 'auto', flex: 1, display: 'flex', flexDirection: 'column', gap: '10px' }}>
                                 {notifications.length === 0 ? (
