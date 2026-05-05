@@ -50,8 +50,14 @@ const Step5_PilihRumah: React.FC<Step5Props> = ({ onSubmit }) => {
     const formatIDR = (val: number) => new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(val);
 
     const handleSelectProperty = (id: string) => {
+        const prop = properties.find(p => p.id === id);
         setSelectedId(id);
-        updateKprFormData({ selectedPropertyId: id });
+        updateKprFormData({ 
+            selectedPropertyId: id,
+            propertyTitle: prop?.title,
+            propertyLocation: prop?.location,
+            propertyPrice: prop?.price
+        });
         setInnerStep('form');
     };
 

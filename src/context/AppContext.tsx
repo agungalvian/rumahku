@@ -22,6 +22,9 @@ export interface KprFormData {
     spouseDob: string;
     spouseIncome: string;
     bankName: string;
+    propertyTitle?: string;
+    propertyLocation?: string;
+    propertyPrice?: number;
 }
 
 export interface UserProfile {
@@ -145,7 +148,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
         setKprFormData({ ...defaultKprForm, selectedPropertyId: propertyId || null });
     };
 
-    const nextKprStep = () => setKprStep(s => Math.min(s + 1, isLoggedIn ? 5 : 6));
+    const nextKprStep = () => setKprStep(s => Math.min(s + 1, isLoggedIn ? 4 : 6));
     const prevKprStep = () => setKprStep(s => Math.max(s - 1, 1));
     const updateKprFormData = (data: Partial<KprFormData>) =>
         setKprFormData(prev => ({ ...prev, ...data }));
@@ -170,6 +173,13 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
                     alert(regResult.error || 'Gagal membuat akun.');
                     return;
                 }
+                // Log the user in after registration
+                login({
+                    nik: regResult.data.nik,
+                    fullName: regResult.data.nama_lengkap,
+                    email: regResult.data.email,
+                    phone: ''
+                });
             }
 
             const res = await fetch('/api/kpr/submit', {
@@ -178,9 +188,9 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
                 body: JSON.stringify({
                     nik: userProfile?.nik || kprFormData.nik,
                     property_id: kprFormData.selectedPropertyId,
-                    property_title: prop?.title,
-                    property_location: prop?.location,
-                    property_price: prop?.price,
+                    property_title: kprFormData.propertyTitle || prop?.title,
+                    property_location: kprFormData.propertyLocation || prop?.location,
+                    property_price: kprFormData.propertyPrice || prop?.price,
                     bank_name: kprFormData.bankName,
                     appointment_date: kprFormData.appointmentDate,
                     appointment_time: kprFormData.appointmentTime
@@ -189,10 +199,8 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
             const result = await res.json();
 
             if (res.ok && result.success) {
-                // If it was a guest, we might want to log them in now, 
-                // but the current UI flow goes to a success page.
                 setKprSubmitted(true);
-                setKprStep(isLoggedIn ? 5 : 6);
+                setKprStep(isLoggedIn ? 4 : 6);
             } else {
                 alert(result.error || 'Gagal mengirim pengajuan.');
             }

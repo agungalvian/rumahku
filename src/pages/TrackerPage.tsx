@@ -317,14 +317,63 @@ const TrackerPage: React.FC<TrackerPageProps> = ({ onNavigate: _onNavigate, onSt
                             </div>
 
                             {/* Progress tracker */}
-                            {selectedPengajuan.status !== 'ditolak' ? (
+                            {selectedPengajuan.status !== 'ditolak' && selectedPengajuan.status !== 'dibatalkan' ? (
                                 <ApplicationTracker currentStep={s.step} />
                             ) : (
-                                <div style={{ backgroundColor: '#FEF2F2', border: '1px solid #FECACA', borderRadius: '12px', padding: '1rem', textAlign: 'center' }}>
-                                    <XCircle size={32} color="#DC2626" style={{ margin: '0 auto 0.5rem' }} />
-                                    <p style={{ fontSize: '0.85rem', fontWeight: 600, color: '#DC2626' }}>Pengajuan Ditolak</p>
-                                    <p style={{ fontSize: '0.75rem', color: '#9B1C1C', marginTop: '4px' }}>Silakan hubungi kantor Rumahku terdekat untuk informasi lebih lanjut.</p>
+                                <div style={{ backgroundColor: selectedPengajuan.status === 'ditolak' ? '#FEF2F2' : '#F9FAFB', border: `1px solid ${selectedPengajuan.status === 'ditolak' ? '#FECACA' : '#E5E7EB'}`, borderRadius: '12px', padding: '1rem', textAlign: 'center' }}>
+                                    {selectedPengajuan.status === 'ditolak' ? (
+                                        <>
+                                            <XCircle size={32} color="#DC2626" style={{ margin: '0 auto 0.5rem' }} />
+                                            <p style={{ fontSize: '0.85rem', fontWeight: 600, color: '#DC2626' }}>Pengajuan Ditolak</p>
+                                            <p style={{ fontSize: '0.75rem', color: '#9B1C1C', marginTop: '4px' }}>Silakan hubungi kantor Rumahku terdekat untuk informasi lebih lanjut.</p>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <X size={32} color="#6B7280" style={{ margin: '0 auto 0.5rem' }} />
+                                            <p style={{ fontSize: '0.85rem', fontWeight: 600, color: '#6B7280' }}>Pengajuan Dibatalkan</p>
+                                            <p style={{ fontSize: '0.75rem', color: '#6B7280', marginTop: '4px' }}>Pengajuan ini telah dibatalkan oleh pemohon.</p>
+                                        </>
+                                    )}
                                 </div>
+                            )}
+
+                            {/* Cancel Button */}
+                            {selectedPengajuan.status === 'proses' && (
+                                <button
+                                    onClick={async () => {
+                                        if (window.confirm('Apakah Anda yakin ingin membatalkan pengajuan ini?')) {
+                                            try {
+                                                const res = await fetch('/api/kpr/cancel', {
+                                                    method: 'POST',
+                                                    headers: { 'Content-Type': 'application/json' },
+                                                    body: JSON.stringify({ id_pengajuan: selectedPengajuan.id_pengajuan, nik: userProfile?.nik })
+                                                });
+                                                const data = await res.json();
+                                                if (data.success) {
+                                                    alert('Pengajuan berhasil dibatalkan.');
+                                                    setSelectedPengajuan(null);
+                                                    // Refresh list
+                                                    fetch(`/api/peserta/riwayat/pengajuan?nik=${userProfile?.nik}`)
+                                                        .then(r => r.json())
+                                                        .then(d => { if (d.success) setPengajuan(d.data); });
+                                                } else {
+                                                    alert(data.error || 'Gagal membatalkan pengajuan.');
+                                                }
+                                            } catch (err) {
+                                                alert('Terjadi kesalahan jaringan.');
+                                            }
+                                        }
+                                    }}
+                                    style={{
+                                        width: '100%', marginTop: '1.5rem', padding: '0.875rem',
+                                        backgroundColor: '#FEE2E2', color: '#DC2626',
+                                        borderRadius: '12px', border: '1.5px solid #FECACA',
+                                        fontWeight: 700, fontSize: '0.875rem', cursor: 'pointer',
+                                        display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px'
+                                    }}
+                                >
+                                    <X size={16} /> Batalkan Pengajuan
+                                </button>
                             )}
                         </div>
                     </>

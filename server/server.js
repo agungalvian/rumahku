@@ -222,57 +222,7 @@ app.post('/api/peserta/login', async (req, res) => {
 
 
 /**
- * 5. Riwayat Pengajuan Pembiayaan by NIK
- */
-app.get('/api/peserta/riwayat/pengajuan', async (req, res) => {
-    const { nik } = req.query;
-    if (!nik) return res.status(400).json({ error: 'NIK is required' });
-
-    try {
-        const result = await pool.query(
-            `SELECT id_pengajuan, jenis, deskripsi, 
-                    TO_CHAR(tanggal_pengajuan, 'DD Mon YYYY') AS tanggal, status
-             FROM pengajuan WHERE peserta_nik = $1
-             ORDER BY tanggal_pengajuan DESC`,
-            [nik]
-        );
-        res.json({ success: true, data: result.rows });
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ error: 'Database error' });
-    }
-});
-
-/**
- * 6. Riwayat Iuran Bulanan by NIK
- */
-app.get('/api/peserta/riwayat/iuran', async (req, res) => {
-    const { nik } = req.query;
-    if (!nik) return res.status(400).json({ error: 'NIK is required' });
-
-    try {
-        const result = await pool.query(
-            `SELECT bulan, tahun, nominal, tipe, status,
-                    TO_CHAR(tanggal_bayar, 'DD Mon YYYY') AS tanggal_bayar
-             FROM iuran WHERE peserta_nik = $1
-             ORDER BY tahun DESC, 
-                CASE bulan 
-                    WHEN 'Januari' THEN 1 WHEN 'Februari' THEN 2 WHEN 'Maret' THEN 3
-                    WHEN 'April' THEN 4 WHEN 'Mei' THEN 5 WHEN 'Juni' THEN 6
-                    WHEN 'Juli' THEN 7 WHEN 'Agustus' THEN 8 WHEN 'September' THEN 9
-                    WHEN 'Oktober' THEN 10 WHEN 'November' THEN 11 WHEN 'Desember' THEN 12
-                END DESC`,
-            [nik]
-        );
-        res.json({ success: true, data: result.rows });
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ error: 'Database error' });
-    }
-});
-
-/**
- * 7. Check NIK Availability & Validity
+ * 5. Check NIK Availability & Validity
  */
 app.post('/api/auth/check-nik', async (req, res) => {
     const { nik } = req.body;
@@ -358,10 +308,45 @@ app.post('/api/kpr/submit', async (req, res) => {
             `INSERT INTO kpr_applications (nik, property_id, property_title, property_location, property_price, bank_name, appointment_date, appointment_time)
              VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
              RETURNING id`,
-            [nik, property_id, property_title, property_location, property_price, bank_name, appointment_date, appointment_time]
+            [
+                nik, 
+                property_id, 
+                property_title, 
+                property_location, 
+                property_price, 
+                bank_name, 
+                appointment_date || null, 
+                appointment_time || null
+            ]
         );
 
         res.json({ success: true, message: 'Pengajuan KPR berhasil dikirim', id: result.rows[0].id });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Database error' });
+    }
+});
+
+/**
+ * 9. Cancel KPR Application
+ */
+app.post('/api/kpr/cancel', async (req, res) => {
+    const { id_pengajuan, nik } = req.body;
+    if (!id_pengajuan || !nik) {
+        return res.status(400).json({ error: 'ID Pengajuan and NIK are required' });
+    }
+
+    try {
+        const result = await pool.query(
+            "UPDATE kpr_applications SET status = 'dibatalkan', updated_at = CURRENT_TIMESTAMP WHERE id = $1 AND nik = $2 AND status = 'proses' RETURNING id",
+            [id_pengajuan, nik]
+        );
+
+        if (result.rows.length === 0) {
+            return res.status(404).json({ error: 'Pengajuan tidak ditemukan atau sudah tidak bisa dibatalkan.' });
+        }
+
+        res.json({ success: true, message: 'Pengajuan berhasil dibatalkan' });
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: 'Database error' });
@@ -385,6 +370,34 @@ app.post('/api/peserta/update', async (req, res) => {
         }
 
         res.json({ success: true, message: 'Profil berhasil diperbarui', data: result.rows[0] });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Database error' });
+    }
+});
+
+/**
+ * Riwayat Iuran Bulanan
+ */
+app.get('/api/peserta/riwayat/iuran', async (req, res) => {
+    const { nik } = req.query;
+    if (!nik) return res.status(400).json({ error: 'NIK is required' });
+
+    try {
+        const result = await pool.query(
+            `SELECT bulan, tahun, nominal, tipe, status,
+                    TO_CHAR(tanggal_bayar, 'DD Mon YYYY') AS tanggal_bayar
+             FROM iuran WHERE nik = $1
+             ORDER BY tahun DESC, 
+                CASE bulan 
+                    WHEN 'Januari' THEN 1 WHEN 'Februari' THEN 2 WHEN 'Maret' THEN 3
+                    WHEN 'April' THEN 4 WHEN 'Mei' THEN 5 WHEN 'Juni' THEN 6
+                    WHEN 'Juli' THEN 7 WHEN 'Agustus' THEN 8 WHEN 'September' THEN 9
+                    WHEN 'Oktober' THEN 10 WHEN 'November' THEN 11 WHEN 'Desember' THEN 12
+                END DESC`,
+            [nik]
+        );
+        res.json({ success: true, data: result.rows });
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: 'Database error' });
