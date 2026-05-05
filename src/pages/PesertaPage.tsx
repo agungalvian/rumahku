@@ -62,6 +62,7 @@ const PesertaPage: React.FC<{ onNavigate: (path: string) => void }> = ({ onNavig
     // Determine specific participant states
     const isBukanPeserta = pesertaData.status === 'Bukan Peserta';
     const isMandiri = pesertaData.status === 'Peserta Pekerja Mandiri';
+    const hasInstansi = !!pesertaData.instansi;
 
     return (
         <div style={{ minHeight: '100vh', backgroundColor: '#F3F4F6', paddingBottom: '90px' }}>
@@ -124,33 +125,35 @@ const PesertaPage: React.FC<{ onNavigate: (path: string) => void }> = ({ onNavig
                         </p>
 
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                            <button
-                                onClick={() => onNavigate('daftar-mandiri')}
-                                style={{
-                                    backgroundColor: 'var(--primary)', color: 'white', padding: '1rem', borderRadius: '12px',
-                                    fontWeight: 600, fontSize: '0.9rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', border: 'none', cursor: 'pointer'
-                                }}
-                            >
-                                <span style={{ textAlign: 'left' }}>
-                                    <div style={{}}>Daftar Peserta Mandiri</div>
-                                    <div style={{ fontSize: '0.7rem', fontWeight: 400, opacity: 0.9 }}>Untuk Freelancer / Pedagang / Pekerja Lepas</div>
-                                </span>
-                                <ArrowRight size={20} />
-                            </button>
-
-                            <button
-                                onClick={() => onNavigate('aktivasi-peserta')}
-                                style={{
-                                    backgroundColor: 'white', color: 'var(--primary)', padding: '1rem', borderRadius: '12px',
-                                    fontWeight: 600, fontSize: '0.9rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', border: '1px solid var(--primary)', cursor: 'pointer'
-                                }}
-                            >
-                                <span style={{ textAlign: 'left' }}>
-                                    <div style={{}}>Aktivasi Peserta</div>
-                                    <div style={{ fontSize: '0.7rem', fontWeight: 400, color: '#6B7280' }}>Untuk ASN / TNI Polri / Karyawan Perusahaan</div>
-                                </span>
-                                <ArrowRight size={20} />
-                            </button>
+                            {!hasInstansi ? (
+                                <button
+                                    onClick={() => onNavigate('daftar-mandiri')}
+                                    style={{
+                                        backgroundColor: 'var(--primary)', color: 'white', padding: '1rem', borderRadius: '12px',
+                                        fontWeight: 600, fontSize: '0.9rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', border: 'none', cursor: 'pointer'
+                                    }}
+                                >
+                                    <span style={{ textAlign: 'left' }}>
+                                        <div style={{}}>Daftar Peserta Mandiri</div>
+                                        <div style={{ fontSize: '0.7rem', fontWeight: 400, opacity: 0.9 }}>Untuk Freelancer / Pedagang / Pekerja Lepas</div>
+                                    </span>
+                                    <ArrowRight size={20} />
+                                </button>
+                            ) : (
+                                <button
+                                    onClick={() => onNavigate('aktivasi-peserta')}
+                                    style={{
+                                        backgroundColor: 'white', color: 'var(--primary)', padding: '1rem', borderRadius: '12px',
+                                        fontWeight: 600, fontSize: '0.9rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', border: '1px solid var(--primary)', cursor: 'pointer'
+                                    }}
+                                >
+                                    <span style={{ textAlign: 'left' }}>
+                                        <div style={{}}>Aktivasi Peserta</div>
+                                        <div style={{ fontSize: '0.7rem', fontWeight: 400, color: '#6B7280' }}>Untuk ASN / TNI Polri / Karyawan Perusahaan</div>
+                                    </span>
+                                    <ArrowRight size={20} />
+                                </button>
+                            )}
                         </div>
                     </div>
                 )}

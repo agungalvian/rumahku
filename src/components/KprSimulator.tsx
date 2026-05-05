@@ -23,8 +23,8 @@ const KprSimulator: React.FC<KprSimulatorProps> = ({ propertyPrice, propertyType
 
     // "Biaya Siluman" / Ekstra Cost Estimations
     const adminFee = isSubsidi ? 500000 : 2000000;
-    const notaryFee = propertyPrice * 0.01;
-    const taxBPHTB = Math.max(0, (propertyPrice - 60000000) * 0.05); // Standard BPHTB (Price - NPOPTKP) * 5% -> Simplified constraint map
+    const notaryFee = isSubsidi ? 0 : propertyPrice * 0.01;
+    const taxBPHTB = isSubsidi ? 0 : Math.max(0, (propertyPrice - 60000000) * 0.05); // Standard BPHTB (Price - NPOPTKP) * 5% -> Simplified constraint map
     const totalFees = dpAmount + adminFee + notaryFee + taxBPHTB;
 
     const formatIDR = (val: number) => new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(val);
@@ -82,8 +82,8 @@ const KprSimulator: React.FC<KprSimulatorProps> = ({ propertyPrice, propertyType
             <div className="text-sm flex flex-col gap-2 mb-4">
                 <div className="flex justify-between"><span>Uang Muka (DP)</span> <span>{formatIDR(dpAmount)}</span></div>
                 <div className="flex justify-between"><span>Biaya Admin Bank</span> <span>{formatIDR(adminFee)}</span></div>
-                <div className="flex justify-between"><span>Biaya Notaris (est)</span> <span>{formatIDR(notaryFee)}</span></div>
-                <div className="flex justify-between"><span>Pajak Pembeli (BPHTB)</span> <span>{formatIDR(taxBPHTB)}</span></div>
+                {notaryFee > 0 && <div className="flex justify-between"><span>Biaya Notaris (est)</span> <span>{formatIDR(notaryFee)}</span></div>}
+                {taxBPHTB > 0 && <div className="flex justify-between"><span>Pajak Pembeli (BPHTB)</span> <span>{formatIDR(taxBPHTB)}</span></div>}
                 <div className="flex justify-between font-bold text-base mt-2 pt-2" style={{ borderTop: '1px solid var(--border-color)' }}>
                     <span>Total Siapkan Dana</span> <span>{formatIDR(totalFees)}</span>
                 </div>

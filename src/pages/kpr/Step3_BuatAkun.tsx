@@ -12,6 +12,7 @@ const Step3_BuatAkun: React.FC<Step3Props> = ({ onNext }) => {
     const { updateKprFormData, kprFormData } = useAppContext();
     const [subStep, setSubStep] = useState<SubStep>('syarat');
     const [agreed, setAgreed] = useState(false);
+    const [fullName, setFullName] = useState(kprFormData.fullName);
     const [email, setEmail] = useState(kprFormData.email);
     const [phone, setPhone] = useState(kprFormData.phone);
     const [ktpUploaded, setKtpUploaded] = useState(false);
@@ -56,7 +57,7 @@ const Step3_BuatAkun: React.FC<Step3Props> = ({ onNext }) => {
     };
 
     const handleDataNext = () => {
-        updateKprFormData({ email, phone });
+        updateKprFormData({ fullName, email, phone });
         setSubStep('password');
     };
 
@@ -136,6 +137,11 @@ const Step3_BuatAkun: React.FC<Step3Props> = ({ onNext }) => {
                     <h2 style={{ fontSize: '1.2rem', fontWeight: 700, marginBottom: '0.5rem' }}>Registrasi Data</h2>
                     <p style={{ fontSize: '0.8rem', color: '#6B7280', marginBottom: '1.25rem' }}>Lengkapi data diri Anda untuk membuat akun.</p>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                        <div>
+                            <label style={{ fontSize: '0.85rem', fontWeight: 600, display: 'block', marginBottom: '0.35rem' }}>Nama Lengkap (Sesuai KTP)</label>
+                            <input type="text" value={fullName} onChange={e => setFullName(e.target.value)} placeholder="Contoh: Budi Santoso" />
+                        </div>
+
                         <div>
                             <label style={{ fontSize: '0.85rem', fontWeight: 600, display: 'block', marginBottom: '0.35rem' }}>Alamat Email</label>
                             <input type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="nama@email.com" />
@@ -244,8 +250,8 @@ const Step3_BuatAkun: React.FC<Step3Props> = ({ onNext }) => {
 
                     <button
                         className="btn btn-primary btn-block"
-                        style={{ marginTop: '1.5rem', padding: '1rem', borderRadius: '14px', opacity: email && isPhoneVerified && ktpUploaded && selfieUploaded ? 1 : 0.6 }}
-                        disabled={!email || !isPhoneVerified || !ktpUploaded || !selfieUploaded}
+                        style={{ marginTop: '1.5rem', padding: '1rem', borderRadius: '14px', opacity: fullName && email && isPhoneVerified && ktpUploaded && selfieUploaded ? 1 : 0.6 }}
+                        disabled={!fullName || !email || !isPhoneVerified || !ktpUploaded || !selfieUploaded}
                         onClick={handleDataNext}
                     >
                         Lanjut ke Password →

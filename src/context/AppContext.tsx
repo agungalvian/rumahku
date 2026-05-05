@@ -149,9 +149,57 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     const prevKprStep = () => setKprStep(s => Math.max(s - 1, 1));
     const updateKprFormData = (data: Partial<KprFormData>) =>
         setKprFormData(prev => ({ ...prev, ...data }));
-    const submitKpr = () => {
-        setKprSubmitted(true);
-        setKprStep(isLoggedIn ? 5 : 6);
+    const submitKpr = async () => {
+        const prop = properties.find(p => p.id === kprFormData.selectedPropertyId);
+        
+        try {
+            // If guest, register account first
+            if (!isLoggedIn) {
+                const regRes = await fetch('/api/auth/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        nik: kprFormData.nik,
+                        nama_lengkap: kprFormData.fullName,
+                        email: kprFormData.email,
+                        password: kprFormData.password
+                    })
+                });
+                const regResult = await regRes.json();
+                if (!regRes.ok) {
+                    alert(regResult.error || 'Gagal membuat akun.');
+                    return;
+                }
+            }
+
+            const res = await fetch('/api/kpr/submit', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    nik: userProfile?.nik || kprFormData.nik,
+                    property_id: kprFormData.selectedPropertyId,
+                    property_title: prop?.title,
+                    property_location: prop?.location,
+                    property_price: prop?.price,
+                    bank_name: kprFormData.bankName,
+                    appointment_date: kprFormData.appointmentDate,
+                    appointment_time: kprFormData.appointmentTime
+                })
+            });
+            const result = await res.json();
+
+            if (res.ok && result.success) {
+                // If it was a guest, we might want to log them in now, 
+                // but the current UI flow goes to a success page.
+                setKprSubmitted(true);
+                setKprStep(isLoggedIn ? 5 : 6);
+            } else {
+                alert(result.error || 'Gagal mengirim pengajuan.');
+            }
+        } catch (err) {
+            console.error(err);
+            alert('Terjadi kesalahan jaringan.');
+        }
     };
 
     return (

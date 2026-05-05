@@ -79,6 +79,14 @@ export default defineConfig({
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api\/tapera/, ''),
       },
+      '/api/peserta': {
+        target: 'http://localhost:3001',
+        changeOrigin: true,
+      },
+      '/api/auth': {
+        target: 'http://localhost:3001',
+        changeOrigin: true,
+      },
     },
   },
 })

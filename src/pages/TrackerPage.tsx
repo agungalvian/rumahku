@@ -30,6 +30,7 @@ const statusConfig: Record<string, { bg: string; text: string; border: string; i
     proses: { bg: '#FEF3C7', text: '#D97706', border: '#D97706', icon: <Clock size={12} />, label: 'Sedang Diproses', step: 1 },
     selesai: { bg: '#D1FAE5', text: '#059669', border: '#059669', icon: <CheckCircle2 size={12} />, label: 'Disetujui', step: 4 },
     ditolak: { bg: '#FEE2E2', text: '#DC2626', border: '#DC2626', icon: <XCircle size={12} />, label: 'Ditolak', step: 1 },
+    dibatalkan: { bg: '#F3F4F6', text: '#6B7280', border: '#9CA3AF', icon: <X size={12} />, label: 'Dibatalkan', step: 0 },
 };
 
 const TrackerPage: React.FC<TrackerPageProps> = ({ onNavigate: _onNavigate, onStartKpr: _onStartKpr }) => {

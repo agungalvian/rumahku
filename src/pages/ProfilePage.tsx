@@ -1,5 +1,5 @@
-import React from 'react';
-import { ArrowLeft, User, Mail, Phone, CreditCard } from 'lucide-react';
+import React, { useState } from 'react';
+import { ArrowLeft, User, Mail, Phone, CreditCard, Edit3, Save, X } from 'lucide-react';
 import { useAppContext } from '../context/AppContext';
 
 interface ProfilePageProps {
@@ -7,7 +7,14 @@ interface ProfilePageProps {
 }
 
 const ProfilePage: React.FC<ProfilePageProps> = ({ onNavigate }) => {
-    const { userProfile } = useAppContext();
+    const { userProfile, updateUserProfile } = useAppContext();
+    const [isEditing, setIsEditing] = useState(false);
+    const [saving, setSaving] = useState(false);
+    const [editData, setEditData] = useState({
+        fullName: userProfile?.fullName || '',
+        email: userProfile?.email || '',
+        phone: userProfile?.phone || ''
+    });
 
     if (!userProfile) return (
         <div style={{ padding: '2rem', textAlign: 'center' }}>
@@ -15,6 +22,49 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ onNavigate }) => {
             <button onClick={() => onNavigate('home')} className="btn btn-primary" style={{ marginTop: '1rem' }}>Kembali</button>
         </div>
     );
+
+    const handleSave = async () => {
+        setSaving(true);
+        try {
+            const res = await fetch('/api/peserta/update', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    nik: userProfile.nik,
+                    nama_lengkap: editData.fullName,
+                    email: editData.email,
+                    no_hp: editData.phone
+                })
+            });
+            const result = await res.json();
+
+            if (res.ok && result.success) {
+                updateUserProfile({
+                    fullName: editData.fullName,
+                    email: editData.email,
+                    phone: editData.phone
+                });
+                setIsEditing(false);
+                alert('Profil berhasil diperbarui!');
+            } else {
+                alert(result.error || 'Gagal memperbarui profil');
+            }
+        } catch (err) {
+            console.error(err);
+            alert('Terjadi kesalahan jaringan');
+        } finally {
+            setSaving(false);
+        }
+    };
+
+    const handleCancel = () => {
+        setEditData({
+            fullName: userProfile.fullName,
+            email: userProfile.email,
+            phone: userProfile.phone
+        });
+        setIsEditing(false);
+    };
 
     return (
         <div style={{ minHeight: '100vh', backgroundColor: '#F9FAFB' }}>
@@ -24,15 +74,42 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ onNavigate }) => {
                 backgroundColor: 'white',
                 borderBottom: '1px solid var(--border-color)',
                 padding: '0.875rem 1rem',
-                display: 'flex', alignItems: 'center', gap: '1rem'
+                display: 'flex', alignItems: 'center', justifyContent: 'space-between'
             }}>
-                <button
-                    onClick={() => onNavigate('home')}
-                    style={{ padding: '6px', borderRadius: '50%', backgroundColor: '#F3F4F6', border: 'none', cursor: 'pointer' }}
-                >
-                    <ArrowLeft size={20} />
-                </button>
-                <h1 style={{ fontSize: '1.1rem', fontWeight: 700 }}>Profil Saya</h1>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                    <button
+                        onClick={() => onNavigate('home')}
+                        style={{ padding: '6px', borderRadius: '50%', backgroundColor: '#F3F4F6', border: 'none', cursor: 'pointer' }}
+                    >
+                        <ArrowLeft size={20} />
+                    </button>
+                    <h1 style={{ fontSize: '1.1rem', fontWeight: 700 }}>Profil Saya</h1>
+                </div>
+
+                {!isEditing ? (
+                    <button
+                        onClick={() => setIsEditing(true)}
+                        style={{ background: 'none', border: 'none', color: 'var(--primary)', display: 'flex', alignItems: 'center', gap: '4px', fontWeight: 600, fontSize: '0.9rem', cursor: 'pointer' }}
+                    >
+                        <Edit3 size={16} /> Edit
+                    </button>
+                ) : (
+                    <div style={{ display: 'flex', gap: '12px' }}>
+                        <button
+                            onClick={handleCancel}
+                            style={{ background: 'none', border: 'none', color: '#64748B', display: 'flex', alignItems: 'center', gap: '4px', fontWeight: 600, fontSize: '0.9rem', cursor: 'pointer' }}
+                        >
+                            <X size={16} /> Batal
+                        </button>
+                        <button
+                            onClick={handleSave}
+                            disabled={saving}
+                            style={{ background: 'none', border: 'none', color: 'var(--primary)', display: 'flex', alignItems: 'center', gap: '4px', fontWeight: 700, fontSize: '0.9rem', cursor: 'pointer', opacity: saving ? 0.6 : 1 }}
+                        >
+                            <Save size={16} /> {saving ? 'Simpan...' : 'Simpan'}
+                        </button>
+                    </div>
+                )}
             </div>
 
             <div style={{ padding: '1.5rem' }}>
@@ -76,7 +153,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ onNavigate }) => {
                             </div>
                             <div style={{ flex: 1 }}>
                                 <div style={{ fontSize: '0.75rem', color: '#64748B', fontWeight: 600, marginBottom: '2px' }}>NIK</div>
-                                <div style={{ fontSize: '0.95rem', fontWeight: 700, color: '#1E293B' }}>{userProfile.nik}</div>
+                                <div style={{ fontSize: '0.95rem', fontWeight: 700, color: '#94A3B8' }}>{userProfile.nik}</div>
                             </div>
                         </div>
 
@@ -87,11 +164,19 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ onNavigate }) => {
                                 alignItems: 'center', justifyContent: 'center',
                                 border: '1px solid #F1F5F9'
                             }}>
-                                <User size={18} color="#64748B" />
+                                <User size={18} color={isEditing ? 'var(--primary)' : '#64748B'} />
                             </div>
                             <div style={{ flex: 1 }}>
                                 <div style={{ fontSize: '0.75rem', color: '#64748B', fontWeight: 600, marginBottom: '2px' }}>Nama Lengkap</div>
-                                <div style={{ fontSize: '0.95rem', fontWeight: 700, color: '#1E293B' }}>{userProfile.fullName}</div>
+                                {isEditing ? (
+                                    <input
+                                        value={editData.fullName}
+                                        onChange={e => setEditData(p => ({ ...p, fullName: e.target.value }))}
+                                        style={{ width: '100%', padding: '8px 0', border: 'none', borderBottom: '2px solid var(--primary)', outline: 'none', fontSize: '0.95rem', fontWeight: 700, color: '#1E293B' }}
+                                    />
+                                ) : (
+                                    <div style={{ fontSize: '0.95rem', fontWeight: 700, color: '#1E293B' }}>{userProfile.fullName}</div>
+                                )}
                             </div>
                         </div>
 
@@ -102,11 +187,20 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ onNavigate }) => {
                                 alignItems: 'center', justifyContent: 'center',
                                 border: '1px solid #F1F5F9'
                             }}>
-                                <Mail size={18} color="#64748B" />
+                                <Mail size={18} color={isEditing ? 'var(--primary)' : '#64748B'} />
                             </div>
                             <div style={{ flex: 1 }}>
                                 <div style={{ fontSize: '0.75rem', color: '#64748B', fontWeight: 600, marginBottom: '2px' }}>Email</div>
-                                <div style={{ fontSize: '0.95rem', fontWeight: 700, color: '#1E293B' }}>{userProfile.email}</div>
+                                {isEditing ? (
+                                    <input
+                                        type="email"
+                                        value={editData.email}
+                                        onChange={e => setEditData(p => ({ ...p, email: e.target.value }))}
+                                        style={{ width: '100%', padding: '8px 0', border: 'none', borderBottom: '2px solid var(--primary)', outline: 'none', fontSize: '0.95rem', fontWeight: 700, color: '#1E293B' }}
+                                    />
+                                ) : (
+                                    <div style={{ fontSize: '0.95rem', fontWeight: 700, color: '#1E293B' }}>{userProfile.email}</div>
+                                )}
                             </div>
                         </div>
 
@@ -117,11 +211,20 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ onNavigate }) => {
                                 alignItems: 'center', justifyContent: 'center',
                                 border: '1px solid #F1F5F9'
                             }}>
-                                <Phone size={18} color="#64748B" />
+                                <Phone size={18} color={isEditing ? 'var(--primary)' : '#64748B'} />
                             </div>
                             <div style={{ flex: 1 }}>
                                 <div style={{ fontSize: '0.75rem', color: '#64748B', fontWeight: 600, marginBottom: '2px' }}>Nomor Handphone</div>
-                                <div style={{ fontSize: '0.95rem', fontWeight: 700, color: '#1E293B' }}>{userProfile.phone}</div>
+                                {isEditing ? (
+                                    <input
+                                        type="tel"
+                                        value={editData.phone}
+                                        onChange={e => setEditData(p => ({ ...p, phone: e.target.value }))}
+                                        style={{ width: '100%', padding: '8px 0', border: 'none', borderBottom: '2px solid var(--primary)', outline: 'none', fontSize: '0.95rem', fontWeight: 700, color: '#1E293B' }}
+                                    />
+                                ) : (
+                                    <div style={{ fontSize: '0.95rem', fontWeight: 700, color: '#1E293B' }}>{userProfile.phone}</div>
+                                )}
                             </div>
                         </div>
                     </div>

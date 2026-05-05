@@ -23,7 +23,6 @@ const guestStepTitles = [
 
 const memberStepTitles = [
     'Ajukan Pembiayaan',
-    'Validasi NIK',
     'Syarat & Ketentuan',
     'Pilih Rumah & Form',
     'Status Pengajuan',
@@ -37,11 +36,11 @@ const KprFlowPage: React.FC<KprFlowPageProps> = ({ onNavigate }) => {
 
     // Map the sequential UI step to the actual content component index
     // Guest: 1, 2, 3, 4, 5, 6
-    // Member: 1, 2, skip3, 4, 5, 6 -> UI Steps: 1, 2, 3, 4, 5
+    // Member: 1, skip2, skip3, 4, 5, 6 -> UI Steps: 1, 2, 3, 4
     const getComponentStep = (uiStep: number) => {
         if (!isLoggedIn) return uiStep;
-        if (uiStep <= 2) return uiStep;
-        return uiStep + 1; // Skip step 3
+        if (uiStep === 1) return 1;
+        return uiStep + 2; // UI step 2 becomes component step 4 (Skip 2 & 3)
     };
 
     const currentComponentStep = getComponentStep(kprStep);

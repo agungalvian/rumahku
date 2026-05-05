@@ -39,7 +39,7 @@ const HomePage: React.FC<HomePageProps> = ({ onNavigate, onStartKpr }) => {
     const [showLoginModal, setShowLoginModal] = useState(false);
     const [showNotifPanel, setShowNotifPanel] = useState(false);
     const [loginMode, setLoginMode] = useState<'login' | 'daftar'>('login');
-    const [loginInput, setLoginInput] = useState({ name: '', nik: '', password: '' });
+    const [loginInput, setLoginInput] = useState({ name: '', nik: '', password: '', email: '' });
     const [showWishlist, setShowWishlist] = useState(false);
     const userMenuRef = useRef<HTMLDivElement>(null);
 
@@ -54,13 +54,59 @@ const HomePage: React.FC<HomePageProps> = ({ onNavigate, onStartKpr }) => {
         return () => document.removeEventListener('mousedown', handler);
     }, []);
 
+    const [nikStatus, setNikStatus] = useState<{ valid: boolean, message: string, isRegistered: boolean } | null>(null);
+    const [isCheckingNik, setIsCheckingNik] = useState(false);
+
+    useEffect(() => {
+        if (loginMode === 'daftar' && loginInput.nik.length === 16) {
+            validateNik(loginInput.nik);
+        } else {
+            setNikStatus(null);
+        }
+    }, [loginInput.nik, loginMode]);
+
+    const validateNik = async (nik: string) => {
+        setIsCheckingNik(true);
+        try {
+            const res = await fetch('/api/auth/check-nik', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ nik })
+            });
+            const data = await res.json();
+            if (res.ok) {
+                setNikStatus({
+                    valid: data.isDukcapilValid && !data.isRegistered,
+                    message: data.message,
+                    isRegistered: data.isRegistered
+                });
+                if (data.name && !loginInput.name) {
+                    setLoginInput(p => ({ ...p, name: data.name }));
+                }
+            }
+        } catch (err) {
+            console.error(err);
+        } finally {
+            setIsCheckingNik(false);
+        }
+    };
+
     const handleLogin = async () => {
         if (loginMode === 'daftar') {
+            if (nikStatus?.isRegistered) {
+                alert('NIK sudah terdaftar. Silakan login.');
+                setLoginMode('login');
+                return;
+            }
+            if (!nikStatus?.valid) {
+                alert('NIK tidak valid atau bermasalah.');
+                return;
+            }
             try {
                 const res = await fetch('/api/auth/register', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ nik: loginInput.nik, password: loginInput.password, nama_lengkap: loginInput.name })
+                    body: JSON.stringify({ nik: loginInput.nik, password: loginInput.password, nama_lengkap: loginInput.name, email: loginInput.email })
                 });
                 const result = await res.json();
 
@@ -68,11 +114,11 @@ const HomePage: React.FC<HomePageProps> = ({ onNavigate, onStartKpr }) => {
                     login({
                         nik: result.data.nik,
                         fullName: result.data.nama_lengkap,
-                        email: '',
+                        email: result.data.email,
                         phone: ''
                     });
                     setShowLoginModal(false);
-                    setLoginInput({ name: '', nik: '', password: '' });
+                    setLoginInput({ name: '', nik: '', password: '', email: '' });
                     alert(result.message);
                 } else {
                     alert(result.error || 'Pendaftaran gagal');
@@ -97,11 +143,11 @@ const HomePage: React.FC<HomePageProps> = ({ onNavigate, onStartKpr }) => {
                 login({
                     nik: result.data.nik,
                     fullName: result.data.nama_lengkap,
-                    email: '', // Fetch doesn't surface email, but safe to omit
+                    email: result.data.email,
                     phone: ''
                 });
                 setShowLoginModal(false);
-                setLoginInput({ name: '', nik: '', password: '' });
+                setLoginInput({ name: '', nik: '', password: '', email: '' });
                 alert(result.message);
             } else {
                 alert(result.error || 'Login gagal');
@@ -554,20 +600,44 @@ const HomePage: React.FC<HomePageProps> = ({ onNavigate, onStartKpr }) => {
 
                             <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                                 {loginMode === 'daftar' && (
-                                    <input
-                                        placeholder="Nama Lengkap"
-                                        value={loginInput.name}
-                                        onChange={e => setLoginInput(p => ({ ...p, name: e.target.value }))}
-                                        style={{ width: '100%', padding: '12px 14px', borderRadius: '10px', border: '1px solid #E5E7EB', fontSize: '0.9rem', boxSizing: 'border-box' }}
-                                    />
+                                    <>
+                                        <input
+                                            placeholder="Nama Lengkap"
+                                            value={loginInput.name}
+                                            onChange={e => setLoginInput(p => ({ ...p, name: e.target.value }))}
+                                            style={{ width: '100%', padding: '12px 14px', borderRadius: '10px', border: '1px solid #E5E7EB', fontSize: '0.9rem', boxSizing: 'border-box' }}
+                                        />
+                                        <input
+                                            type="email"
+                                            placeholder="Alamat Email"
+                                            value={loginInput.email}
+                                            onChange={e => setLoginInput(p => ({ ...p, email: e.target.value }))}
+                                            style={{ width: '100%', padding: '12px 14px', borderRadius: '10px', border: '1px solid #E5E7EB', fontSize: '0.9rem', boxSizing: 'border-box' }}
+                                        />
+                                    </>
                                 )}
-                                <input
-                                    type="number"
-                                    placeholder="Nomor Induk Kependudukan (NIK)"
-                                    value={loginInput.nik}
-                                    onChange={e => setLoginInput(p => ({ ...p, nik: e.target.value }))}
-                                    style={{ width: '100%', padding: '12px 14px', borderRadius: '10px', border: '1px solid #E5E7EB', fontSize: '0.9rem', boxSizing: 'border-box' }}
-                                />
+                                <div style={{ position: 'relative' }}>
+                                    <input
+                                        type="tel"
+                                        placeholder="Nomor Induk Kependudukan (NIK)"
+                                        value={loginInput.nik}
+                                        onChange={e => {
+                                            const val = e.target.value.replace(/\D/g, '');
+                                            if (val.length <= 16) setLoginInput(p => ({ ...p, nik: val }));
+                                        }}
+                                        style={{
+                                            width: '100%', padding: '12px 14px', borderRadius: '10px',
+                                            border: nikStatus ? (nikStatus.valid ? '1.5px solid #10B981' : '1.5px solid #EF4444') : '1px solid #E5E7EB',
+                                            fontSize: '0.9rem', boxSizing: 'border-box'
+                                        }}
+                                    />
+                                    <div style={{ position: 'absolute', right: '12px', top: '50%', transform: 'translateY(-50%)', display: 'flex', alignItems: 'center' }}>
+                                        {isCheckingNik && <RefreshCw size={16} className="spin" style={{ color: 'var(--primary)' }} />}
+                                        {!isCheckingNik && nikStatus?.valid && <span style={{ color: '#10B981', fontWeight: 700 }}>✓</span>}
+                                        {!isCheckingNik && nikStatus && !nikStatus.valid && <span style={{ color: '#EF4444', fontSize: '0.7rem', fontWeight: 600 }}>{nikStatus.message}</span>}
+                                    </div>
+                                </div>
+                                <style>{`.spin { animation: spin 1s linear infinite; } @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }`}</style>
                                 <input
                                     type="password"
                                     placeholder="Password"

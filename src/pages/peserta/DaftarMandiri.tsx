@@ -1,24 +1,39 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ChevronLeft, Camera, CheckCircle2 } from 'lucide-react';
+import { useAppContext } from '../../context/AppContext';
 
 const DaftarMandiri: React.FC<{ onNavigate: (page: string) => void }> = ({ onNavigate }) => {
+    const { userProfile } = useAppContext();
     const [step, setStep] = useState(1);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
 
     const [form, setForm] = useState({
-        nik: '',
-        password: '',
-        nama_lengkap: '',
+        nik: userProfile?.nik || '',
+        password: '', // Password not needed if already logged in
+        nama_lengkap: userProfile?.fullName || '',
         tanggal_lahir: '',
         jenis_pekerjaan: '',
         estimasi_penghasilan: '',
         rekening_bank: '',
         alamat_domisili: '',
-        email: '',
-        no_hp: '',
+        email: userProfile?.email || '',
+        no_hp: userProfile?.phone || '',
         agree: false
     });
+
+    // Ensure form is synced if userProfile changes
+    useEffect(() => {
+        if (userProfile) {
+            setForm(prev => ({
+                ...prev,
+                nik: userProfile.nik,
+                nama_lengkap: userProfile.fullName,
+                email: userProfile.email,
+                no_hp: userProfile.phone
+            }));
+        }
+    }, [userProfile]);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
         setForm({ ...form, [e.target.name]: e.target.value });
@@ -78,14 +93,11 @@ const DaftarMandiri: React.FC<{ onNavigate: (page: string) => void }> = ({ onNav
                         <h2 style={{ fontSize: '1.1rem', fontWeight: 700, color: '#1F2937', marginBottom: '1rem' }}>Data Pribadi</h2>
 
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                            <div>
-                                <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, color: '#374151', marginBottom: '0.4rem' }}>NIK KTP</label>
-                                <input name="nik" type="number" value={form.nik} onChange={handleChange} style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid #D1D5DB' }} />
+                            <div style={{ backgroundColor: '#F8FAFC', padding: '1rem', borderRadius: '12px', border: '1px solid #E2E8F0', marginBottom: '0.5rem' }}>
+                                <div style={{ fontSize: '0.75rem', color: '#64748B', fontWeight: 600, marginBottom: '2px' }}>NIK Terverifikasi</div>
+                                <div style={{ fontSize: '1rem', fontWeight: 700, color: '#1E293B', letterSpacing: '1px' }}>{userProfile?.nik}</div>
                             </div>
-                            <div>
-                                <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, color: '#374151', marginBottom: '0.4rem' }}>Buat Password Masuk</label>
-                                <input name="password" type="password" placeholder="Minimal 6 karakter" value={form.password} onChange={handleChange} style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid #D1D5DB' }} />
-                            </div>
+
                             <div>
                                 <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, color: '#374151', marginBottom: '0.4rem' }}>Nama Lengkap Sesuai KTP</label>
                                 <input name="nama_lengkap" value={form.nama_lengkap} onChange={handleChange} style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid #D1D5DB' }} />
@@ -106,8 +118,8 @@ const DaftarMandiri: React.FC<{ onNavigate: (page: string) => void }> = ({ onNav
 
                         <button
                             onClick={() => setStep(2)}
-                            disabled={!form.nik || !form.nama_lengkap}
-                            style={{ width: '100%', padding: '0.875rem', borderRadius: '12px', backgroundColor: 'var(--primary)', color: 'white', fontWeight: 600, fontSize: '1rem', border: 'none', marginTop: '1.5rem' }}
+                            disabled={!form.nama_lengkap || !form.tanggal_lahir}
+                            style={{ width: '100%', padding: '0.875rem', borderRadius: '12px', backgroundColor: 'var(--primary)', color: 'white', fontWeight: 600, fontSize: '1rem', border: 'none', marginTop: '1.5rem', opacity: (!form.nama_lengkap || !form.tanggal_lahir) ? 0.6 : 1 }}
                         >
                             Lanjutkan
                         </button>

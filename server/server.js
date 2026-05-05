@@ -73,19 +73,19 @@ app.post('/api/peserta/check', async (req, res) => {
  * 1.5 Register Base Digital Account Only
  */
 app.post('/api/auth/register', async (req, res) => {
-    const { nik, nama_lengkap, password } = req.body;
+    const { nik, nama_lengkap, password, email } = req.body;
 
-    if (!nik || !nama_lengkap || !password) {
+    if (!nik || !nama_lengkap || !password || !email) {
         return res.status(400).json({ error: 'Missing core personal fields' });
     }
 
     try {
         const result = await pool.query(
-            `INSERT INTO peserta (nik, password, nama_lengkap, status)
-             VALUES ($1, $2, $3, 'Bukan Peserta')
+            `INSERT INTO peserta (nik, password, nama_lengkap, email, status)
+             VALUES ($1, $2, $3, $4, 'Bukan Peserta')
              ON CONFLICT (nik) DO NOTHING
-             RETURNING nik, nama_lengkap, status`,
-            [nik, password, nama_lengkap]
+             RETURNING nik, nama_lengkap, email, status`,
+            [nik, password, nama_lengkap, email]
         );
 
         if (result.rowLength === 0) {
@@ -209,6 +209,7 @@ app.post('/api/peserta/login', async (req, res) => {
                 id: user.id,
                 nik: user.nik,
                 nama_lengkap: user.nama_lengkap,
+                email: user.email,
                 id_peserta: user.id_peserta,
                 status: user.status
             }
@@ -264,6 +265,126 @@ app.get('/api/peserta/riwayat/iuran', async (req, res) => {
             [nik]
         );
         res.json({ success: true, data: result.rows });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Database error' });
+    }
+});
+
+/**
+ * 7. Check NIK Availability & Validity
+ */
+app.post('/api/auth/check-nik', async (req, res) => {
+    const { nik } = req.body;
+    if (!nik || nik.length !== 16) return res.status(400).json({ error: 'NIK must be 16 digits' });
+
+    try {
+        const userCheck = await pool.query("SELECT id, password, nama_lengkap FROM peserta WHERE nik = $1", [nik]);
+        
+        let status = 'available';
+        let isRegistered = false;
+        let name = '';
+
+        if (userCheck.rows.length > 0) {
+            name = userCheck.rows[0].nama_lengkap;
+            if (userCheck.rows[0].password) {
+                status = 'registered';
+                isRegistered = true;
+            } else {
+                status = 'needs_activation';
+            }
+        }
+
+        res.json({ 
+            success: true, 
+            status, 
+            isRegistered,
+            isDukcapilValid: true, // Simulation: In reality, call Dukcapil API
+            name,
+            message: status === 'registered' ? 'NIK sudah terdaftar' : 'NIK valid'
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Database error' });
+    }
+});
+
+/**
+ * 8. Get Application History (KPR)
+ */
+app.get('/api/peserta/riwayat/pengajuan', async (req, res) => {
+    const { nik } = req.query;
+    if (!nik) return res.status(400).json({ error: 'NIK is required' });
+
+    try {
+        const result = await pool.query(
+            `SELECT id as id_pengajuan, 'KPR Tapera' as jenis, property_title as deskripsi, 
+             TO_CHAR(created_at, 'DD Mon YYYY') as tanggal, status 
+             FROM kpr_applications 
+             WHERE nik = $1 
+             ORDER BY created_at DESC`,
+            [nik]
+        );
+        res.json({ success: true, data: result.rows });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Database error' });
+    }
+});
+
+/**
+ * 8. Submit KPR Application
+ */
+app.post('/api/kpr/submit', async (req, res) => {
+    const { nik, property_id, property_title, property_location, property_price, bank_name, appointment_date, appointment_time } = req.body;
+    
+    if (!nik || !property_id) {
+        return res.status(400).json({ error: 'NIK and Property ID are required' });
+    }
+
+    try {
+        // Check for active applications (not 'dibatalkan' and not 'ditolak'?) 
+        // User says: "pengajuan tidak boleh double jika ada pengajuan yang sedang di proses"
+        const activeCheck = await pool.query(
+            "SELECT id FROM kpr_applications WHERE nik = $1 AND status = 'proses'",
+            [nik]
+        );
+
+        if (activeCheck.rows.length > 0) {
+            return res.status(400).json({ error: 'Anda masih memiliki pengajuan yang sedang diproses.' });
+        }
+
+        const result = await pool.query(
+            `INSERT INTO kpr_applications (nik, property_id, property_title, property_location, property_price, bank_name, appointment_date, appointment_time)
+             VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+             RETURNING id`,
+            [nik, property_id, property_title, property_location, property_price, bank_name, appointment_date, appointment_time]
+        );
+
+        res.json({ success: true, message: 'Pengajuan KPR berhasil dikirim', id: result.rows[0].id });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Database error' });
+    }
+});
+app.post('/api/peserta/update', async (req, res) => {
+    const { nik, nama_lengkap, email, no_hp } = req.body;
+    if (!nik) return res.status(400).json({ error: 'NIK is required' });
+
+    try {
+        const result = await pool.query(
+            `UPDATE peserta 
+             SET nama_lengkap = $1, email = $2, no_hp = $3, updated_at = CURRENT_TIMESTAMP
+             WHERE nik = $4
+             RETURNING nik, nama_lengkap, email, no_hp`,
+            [nama_lengkap, email, no_hp, nik]
+        );
+
+        if (result.rows.length === 0) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        res.json({ success: true, message: 'Profil berhasil diperbarui', data: result.rows[0] });
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: 'Database error' });
