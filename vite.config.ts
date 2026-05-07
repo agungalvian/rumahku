@@ -79,6 +79,11 @@ export default defineConfig({
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api\/tapera/, ''),
       },
+      '/api/tapera-static': {
+        target: 'https://sikumbang.tapera.go.id',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api\/tapera-static/, ''),
+      },
       '/api/peserta': {
         target: 'http://localhost:3001',
         changeOrigin: true,

@@ -65,8 +65,13 @@ const mapStatus = (status: string): PropertyType =>
 
 const toImageUrl = (path: string): string => {
     if (!path) return '';
+    // If it's already an absolute URL to tapera, proxy it
+    if (path.startsWith('https://sikumbang.tapera.go.id')) {
+        return path.replace('https://sikumbang.tapera.go.id', '/api/tapera-static');
+    }
     if (path.startsWith('http')) return path;
-    return `https://sikumbang.tapera.go.id${path}`;
+    const cleanPath = path.startsWith('/') ? path : `/${path}`;
+    return `/api/tapera-static${cleanPath}`;
 };
 
 const mapToProperty = (lokasi: TaperaLokasi): Property | null => {
@@ -85,7 +90,7 @@ const mapToProperty = (lokasi: TaperaLokasi): Property | null => {
     const lng = parseFloat(lngStr) || 0;
 
     const galleryUrls = [
-        ...lokasi.foto,
+        ...lokasi.foto.map(toImageUrl),
         tipe.fotoTampak ? toImageUrl(tipe.fotoTampak) : '',
         tipe.fotoDenah ? toImageUrl(tipe.fotoDenah) : '',
     ].filter(Boolean);
@@ -118,7 +123,7 @@ const mapToProperty = (lokasi: TaperaLokasi): Property | null => {
             buildArea: tipe.luasBangunan,
         },
         facilities: facilities.slice(0, 4),
-        imageUrl: lokasi.foto[0] ?? toImageUrl(tipe.fotoTampak),
+        imageUrl: toImageUrl(lokasi.foto[0] || tipe.fotoTampak),
         galleryUrls,
         features,
         isPromo: false,
