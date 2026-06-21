@@ -163,6 +163,7 @@ export interface PropertyFilters {
     jenisPerumahan?: string;
     tipeProperti?: string;
     sortByDistance?: boolean;
+    limit?: number;
 }
 
 export interface WilayahOptions {
@@ -201,7 +202,7 @@ export const useProperties = (): UsePropertiesResult => {
             try {
                 const params = new URLSearchParams({
                     page: '1',
-                    limit: '300', // Increased limit to find more rare properties
+                    limit: (filters.limit || 10).toString(),
                 });
 
                 if (filters.jenisPerumahan === 'Rumah Susun') {

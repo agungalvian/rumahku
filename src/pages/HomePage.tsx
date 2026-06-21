@@ -43,31 +43,9 @@ const HomePage: React.FC<HomePageProps> = ({ onNavigate, onStartKpr }) => {
     const [loginInput, setLoginInput] = useState({ name: '', nik: '', password: '', email: '' });
     const [showWishlist, setShowWishlist] = useState(false);
     const userMenuRef = useRef<HTMLDivElement>(null);
-    const [visibleCount, setVisibleCount] = useState(10);
-    const observerTarget = useRef<HTMLDivElement>(null);
+    // local visibleCount removed, using filters.limit instead
 
-    // Reset visible count when filters change
-    useEffect(() => {
-        setVisibleCount(10);
-    }, [filters, properties]);
-
-    // Intersection observer for infinite scroll
-    useEffect(() => {
-        const observer = new IntersectionObserver(
-            entries => {
-                if (entries[0].isIntersecting) {
-                    setVisibleCount(prev => prev + 10);
-                }
-            },
-            { rootMargin: '100px' }
-        );
-
-        if (observerTarget.current) {
-            observer.observe(observerTarget.current);
-        }
-
-        return () => observer.disconnect();
-    }, [properties, visibleCount]);
+    // Intersection observer removed in favor of manual load more button
 
     // Close dropdown when clicking outside
     useEffect(() => {
@@ -511,7 +489,10 @@ const HomePage: React.FC<HomePageProps> = ({ onNavigate, onStartKpr }) => {
                             ✕ Hapus Filter
                         </button>
                     ) : (
-                        <button style={{ fontSize: '0.75rem', color: 'var(--primary)', fontWeight: 600, background: 'none', border: 'none' }}>
+                        <button 
+                            onClick={() => setFilters({})}
+                            style={{ fontSize: '0.75rem', color: 'var(--primary)', fontWeight: 600, background: 'none', border: 'none' }}
+                        >
                             Lihat Semua
                         </button>
                     )}
@@ -567,7 +548,7 @@ const HomePage: React.FC<HomePageProps> = ({ onNavigate, onStartKpr }) => {
                     })}
                 </div>
 
-                {loading && (
+                {loading && filteredProperties.length === 0 && (
                     <div style={{ textAlign: 'center', padding: '2rem 0' }}>
                         <div style={{
                             width: '40px', height: '40px', border: '4px solid var(--border-color)',
@@ -587,10 +568,10 @@ const HomePage: React.FC<HomePageProps> = ({ onNavigate, onStartKpr }) => {
                     </div>
                 )}
 
-                {!loading && !error && filteredProperties.length > 0 && (
+                {!error && filteredProperties.length > 0 && (
                     <>
-                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '12px' }}>
-                            {filteredProperties.slice(0, visibleCount).map(property => (
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '12px', opacity: loading ? 0.5 : 1, transition: 'opacity 0.2s' }}>
+                            {filteredProperties.map(property => (
                                 <PropertyCard
                                     key={property.id}
                                     property={property}
@@ -599,13 +580,28 @@ const HomePage: React.FC<HomePageProps> = ({ onNavigate, onStartKpr }) => {
                                 />
                             ))}
                         </div>
-                        {visibleCount < filteredProperties.length && (
-                            <div ref={observerTarget} style={{ padding: '1.5rem 0', textAlign: 'center' }}>
-                                <div style={{
-                                    width: '24px', height: '24px', border: '3px solid var(--border-color)',
-                                    borderTopColor: 'var(--primary)', borderRadius: '50%',
-                                    animation: 'spin 0.8s linear infinite', margin: '0 auto',
-                                }} />
+                        {filteredProperties.length >= (filters.limit || 10) && (
+                            <div style={{ display: 'flex', justifyContent: 'center', padding: '1.5rem 0 2rem' }}>
+                                <button
+                                    onClick={() => setFilters(prev => ({ ...prev, limit: (prev.limit || 10) + 10 }))}
+                                    disabled={loading}
+                                    style={{
+                                        backgroundColor: 'white',
+                                        color: 'var(--primary)',
+                                        border: '1px solid rgba(0,0,0,0.05)',
+                                        borderRadius: '30px',
+                                        padding: '12px 28px',
+                                        fontSize: '0.85rem',
+                                        fontWeight: 700,
+                                        boxShadow: '0 6px 16px rgba(0,0,0,0.08), 0 2px 4px rgba(0,0,0,0.04)',
+                                        cursor: 'pointer',
+                                        transition: 'transform 0.2s',
+                                    }}
+                                    onMouseOver={(e) => (e.currentTarget.style.transform = 'scale(1.05)')}
+                                    onMouseOut={(e) => (e.currentTarget.style.transform = 'scale(1)')}
+                                >
+                                    {loading ? 'Memuat...' : 'Muat Lebih Banyak'}
+                                </button>
                             </div>
                         )}
                     </>
