@@ -80,7 +80,8 @@ const mapToProperty = (lokasi: TaperaLokasi): Property | null => {
         lokasi.tipeRumah.find(t => t.status === 'komersil') ??
         lokasi.tipeRumah[0];
 
-    if (!tipe) return null;
+    // Allow properties even if they don't have tipe details
+    // if (!tipe) return null;
 
     const { kecamatan, kabupaten, provinsi } = lokasi.wilayah;
     const location = [kecamatan, kabupaten, provinsi].filter(Boolean).join(', ');
@@ -91,17 +92,17 @@ const mapToProperty = (lokasi: TaperaLokasi): Property | null => {
 
     const galleryUrls = [
         ...lokasi.foto.map(toImageUrl),
-        tipe.fotoTampak ? toImageUrl(tipe.fotoTampak) : '',
-        tipe.fotoDenah ? toImageUrl(tipe.fotoDenah) : '',
+        tipe?.fotoTampak ? toImageUrl(tipe.fotoTampak) : '',
+        tipe?.fotoDenah ? toImageUrl(tipe.fotoDenah) : '',
     ].filter(Boolean);
 
     const facilities: string[] = [];
-    if (tipe.spesifikasiAtap) facilities.push(`Atap: ${tipe.spesifikasiAtap}`);
-    if (tipe.spesifikasiDinding) facilities.push(`Dinding: ${tipe.spesifikasiDinding}`);
-    if (tipe.spesifikasiLantai) facilities.push(`Lantai: ${tipe.spesifikasiLantai}`);
-    if (tipe.spesifikasiPondasi) facilities.push(`Pondasi: ${tipe.spesifikasiPondasi}`);
+    if (tipe?.spesifikasiAtap) facilities.push(`Atap: ${tipe.spesifikasiAtap}`);
+    if (tipe?.spesifikasiDinding) facilities.push(`Dinding: ${tipe.spesifikasiDinding}`);
+    if (tipe?.spesifikasiLantai) facilities.push(`Lantai: ${tipe.spesifikasiLantai}`);
+    if (tipe?.spesifikasiPondasi) facilities.push(`Pondasi: ${tipe.spesifikasiPondasi}`);
 
-    const type = mapStatus(tipe.status);
+    const type = tipe ? mapStatus(tipe.status) : 'Subsidi';
 
     const features: string[] = [
         type === 'Subsidi' ? 'Subsidi Pemerintah' : 'Komersial',
@@ -113,17 +114,17 @@ const mapToProperty = (lokasi: TaperaLokasi): Property | null => {
         id: lokasi.idLokasi,
         title: lokasi.namaPerumahan,
         type,
-        price: tipe.harga,
+        price: tipe?.harga || 0,
         location,
         coordinates: { lat, lng },
         specifications: {
-            bedrooms: Math.max(tipe.kamarTidur, 0),
-            bathrooms: Math.max(tipe.kamarMandi, 0),
-            landArea: tipe.luasTanah,
-            buildArea: tipe.luasBangunan,
+            bedrooms: Math.max(tipe?.kamarTidur || 0, 0),
+            bathrooms: Math.max(tipe?.kamarMandi || 0, 0),
+            landArea: tipe?.luasTanah || 0,
+            buildArea: tipe?.luasBangunan || 0,
         },
         facilities: facilities.slice(0, 4),
-        imageUrl: toImageUrl(lokasi.foto[0] || tipe.fotoTampak),
+        imageUrl: toImageUrl(lokasi.foto[0] || tipe?.fotoTampak),
         galleryUrls,
         features,
         isPromo: false,
@@ -200,7 +201,7 @@ export const useProperties = (): UsePropertiesResult => {
                 const params = new URLSearchParams({
                     sort: 'terbaru',
                     page: '1',
-                    limit: '100',
+                    limit: '300', // Increased limit to find more rare properties like Rumah Susun
                 });
 
                 // NOTE: Tapera API ignores all filter params — all filtering is done client-side.

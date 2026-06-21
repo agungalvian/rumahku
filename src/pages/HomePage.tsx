@@ -60,11 +60,11 @@ const HomePage: React.FC<HomePageProps> = ({ onNavigate, onStartKpr }) => {
             },
             { rootMargin: '100px' }
         );
-        
+
         if (observerTarget.current) {
             observer.observe(observerTarget.current);
         }
-        
+
         return () => observer.disconnect();
     }, [properties, visibleCount]);
 
@@ -339,79 +339,79 @@ const HomePage: React.FC<HomePageProps> = ({ onNavigate, onStartKpr }) => {
             <div style={{ padding: '1rem', backgroundColor: 'var(--bg-color)' }}>
                 <div style={{ position: 'relative', overflow: 'hidden', backgroundColor: '#f3f4f6', borderRadius: '16px' }}>
                     {/* Slide content */}
-                <div
-                    style={{
-                        display: 'flex',
-                        transform: `translateX(-${activeSlide * 100}%)`,
-                        transition: 'transform 0.5s cubic-bezier(0.4,0,0.2,1)',
-                    }}
-                >
-                    {bannerSlides.map((s) => (
-                        <div
-                            key={s.id}
-                            style={{
-                                minWidth: '100%',
-                                height: '140px',
-                                flexShrink: 0,
-                                position: 'relative',
-                            }}
-                        >
-                            <img
-                                src={s.imageUrl}
-                                alt={`Banner ${s.id}`}
+                    <div
+                        style={{
+                            display: 'flex',
+                            transform: `translateX(-${activeSlide * 100}%)`,
+                            transition: 'transform 0.5s cubic-bezier(0.4,0,0.2,1)',
+                        }}
+                    >
+                        {bannerSlides.map((s) => (
+                            <div
+                                key={s.id}
                                 style={{
-                                    width: '100%',
-                                    height: '100%',
-                                    objectFit: 'cover',
+                                    minWidth: '100%',
+                                    height: '140px',
+                                    flexShrink: 0,
+                                    position: 'relative',
+                                }}
+                            >
+                                <img
+                                    src={s.imageUrl}
+                                    alt={`Banner ${s.id}`}
+                                    style={{
+                                        width: '100%',
+                                        height: '100%',
+                                        objectFit: 'cover',
+                                    }}
+                                />
+                            </div>
+                        ))}
+                    </div>
+
+                    {/* Prev / Next arrows */}
+                    <button
+                        onClick={() => goTo((activeSlide - 1 + bannerSlides.length) % bannerSlides.length)}
+                        style={{
+                            position: 'absolute', left: '8px', top: '50%', transform: 'translateY(-50%)',
+                            backgroundColor: 'rgba(255,255,255,0.25)', borderRadius: '50%',
+                            width: '28px', height: '28px', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        }}
+                    >
+                        <ChevronLeft size={16} color="white" />
+                    </button>
+                    <button
+                        onClick={() => goTo((activeSlide + 1) % bannerSlides.length)}
+                        style={{
+                            position: 'absolute', right: '8px', top: '50%', transform: 'translateY(-50%)',
+                            backgroundColor: 'rgba(255,255,255,0.25)', borderRadius: '50%',
+                            width: '28px', height: '28px', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        }}
+                    >
+                        <ChevronRight size={16} color="white" />
+                    </button>
+
+                    {/* Dot indicators */}
+                    <div style={{
+                        position: 'absolute', bottom: '8px', left: '50%', transform: 'translateX(-50%)',
+                        display: 'flex', gap: '6px',
+                    }}>
+                        {bannerSlides.map((_, idx) => (
+                            <button
+                                key={idx}
+                                onClick={() => goTo(idx)}
+                                style={{
+                                    width: idx === activeSlide ? '20px' : '8px',
+                                    height: '8px',
+                                    borderRadius: '4px',
+                                    backgroundColor: idx === activeSlide ? 'white' : 'rgba(255,255,255,0.45)',
+                                    transition: 'all 0.3s ease',
+                                    padding: 0,
                                 }}
                             />
-                        </div>
-                    ))}
+                        ))}
+                    </div>
                 </div>
-
-                {/* Prev / Next arrows */}
-                <button
-                    onClick={() => goTo((activeSlide - 1 + bannerSlides.length) % bannerSlides.length)}
-                    style={{
-                        position: 'absolute', left: '8px', top: '50%', transform: 'translateY(-50%)',
-                        backgroundColor: 'rgba(255,255,255,0.25)', borderRadius: '50%',
-                        width: '28px', height: '28px', display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    }}
-                >
-                    <ChevronLeft size={16} color="white" />
-                </button>
-                <button
-                    onClick={() => goTo((activeSlide + 1) % bannerSlides.length)}
-                    style={{
-                        position: 'absolute', right: '8px', top: '50%', transform: 'translateY(-50%)',
-                        backgroundColor: 'rgba(255,255,255,0.25)', borderRadius: '50%',
-                        width: '28px', height: '28px', display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    }}
-                >
-                    <ChevronRight size={16} color="white" />
-                </button>
-
-                {/* Dot indicators */}
-                <div style={{
-                    position: 'absolute', bottom: '8px', left: '50%', transform: 'translateX(-50%)',
-                    display: 'flex', gap: '6px',
-                }}>
-                    {bannerSlides.map((_, idx) => (
-                        <button
-                            key={idx}
-                            onClick={() => goTo(idx)}
-                            style={{
-                                width: idx === activeSlide ? '20px' : '8px',
-                                height: '8px',
-                                borderRadius: '4px',
-                                backgroundColor: idx === activeSlide ? 'white' : 'rgba(255,255,255,0.45)',
-                                transition: 'all 0.3s ease',
-                                padding: 0,
-                            }}
-                        />
-                    ))}
-                </div>
-            </div>
             </div>
             {/* ── Service Menu ── */}
             <div style={{
@@ -420,75 +420,75 @@ const HomePage: React.FC<HomePageProps> = ({ onNavigate, onStartKpr }) => {
                 marginBottom: '0.5rem',
             }}>
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 1rem', marginBottom: '0.75rem' }}>
-                    <h2 style={{ fontSize: '1.05rem', fontWeight: 800, color: '#111827' }}>Layanan</h2>
+                    <h2 style={{ fontSize: '1.05rem', fontWeight: 800, color: '#111827' }}>rumah.go.id</h2>
                     <button style={{ fontSize: '0.75rem', color: 'var(--primary)', fontWeight: 600, background: 'none', border: 'none' }}>
                         Lihat Semua
                     </button>
                 </div>
                 <div style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch', msOverflowStyle: 'none', scrollbarWidth: 'none' }}>
-                <style>{`
+                    <style>{`
                     .service-scroll-container::-webkit-scrollbar {
                         display: none;
                     }
                 `}</style>
-                <div
-                    className="service-scroll-container"
-                    style={{
-                        display: 'flex',
-                        gap: '12px',
-                        padding: '0 1.25rem',
-                        width: 'max-content',
-                    }}
-                >
-                    {services.map(svc => (
-                        <button
-                            key={svc.key}
-                            onClick={() => {
-                                if (svc.key === 'kbr') onNavigate('kbr');
-                                else if (svc.key === 'krr') onNavigate('krr');
-                                else if (svc.key === 'refund') onNavigate('eklaim');
-                                else onStartKpr?.();
-                            }}
-                            style={{
-                                width: '72px',
-                                display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px',
-                                background: 'none',
-                                border: 'none',
-                                padding: '4px 0',
-                                flexShrink: 0,
-                                transition: 'transform 0.2s',
-                                cursor: 'pointer',
-                            }}
-                        >
-                            <div style={{
-                                width: '56px',
-                                height: '56px',
-                                borderRadius: '50%',
-                                backgroundColor: 'var(--primary-light)',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                marginBottom: '2px',
-                                boxShadow: '0 2px 8px rgba(91,178,74,0.15)'
-                            }}>
-                                <img src={svc.iconPath} alt={svc.label} style={{ width: '32px', height: '32px', objectFit: 'contain' }} />
-                            </div>
-                            <span style={{
-                                fontSize: '0.68rem',
-                                fontWeight: 600,
-                                color: '#374151',
-                                textAlign: 'center',
-                                lineHeight: 1.2,
-                                height: '2.4em',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center'
-                            }}>
-                                {svc.label}
-                            </span>
-                        </button>
-                    ))}
-                </div>
+                    <div
+                        className="service-scroll-container"
+                        style={{
+                            display: 'flex',
+                            gap: '12px',
+                            padding: '0 1.25rem',
+                            width: 'max-content',
+                        }}
+                    >
+                        {services.map(svc => (
+                            <button
+                                key={svc.key}
+                                onClick={() => {
+                                    if (svc.key === 'kbr') onNavigate('kbr');
+                                    else if (svc.key === 'krr') onNavigate('krr');
+                                    else if (svc.key === 'refund') onNavigate('eklaim');
+                                    else onStartKpr?.();
+                                }}
+                                style={{
+                                    width: '72px',
+                                    display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px',
+                                    background: 'none',
+                                    border: 'none',
+                                    padding: '4px 0',
+                                    flexShrink: 0,
+                                    transition: 'transform 0.2s',
+                                    cursor: 'pointer',
+                                }}
+                            >
+                                <div style={{
+                                    width: '56px',
+                                    height: '56px',
+                                    borderRadius: '50%',
+                                    backgroundColor: 'var(--primary-light)',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    marginBottom: '2px',
+                                    boxShadow: '0 2px 8px rgba(91,178,74,0.15)'
+                                }}>
+                                    <img src={svc.iconPath} alt={svc.label} style={{ width: '32px', height: '32px', objectFit: 'contain' }} />
+                                </div>
+                                <span style={{
+                                    fontSize: '0.68rem',
+                                    fontWeight: 600,
+                                    color: '#374151',
+                                    textAlign: 'center',
+                                    lineHeight: 1.2,
+                                    height: '2.4em',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center'
+                                }}>
+                                    {svc.label}
+                                </span>
+                            </button>
+                        ))}
+                    </div>
                 </div>
             </div>
 
@@ -500,7 +500,7 @@ const HomePage: React.FC<HomePageProps> = ({ onNavigate, onStartKpr }) => {
                             ? 'Rumah Terdekat'
                             : filters.keyword || filters.provinsi || filters.kabKota || filters.kecamatan
                                 ? 'Hasil Pencarian'
-                                : 'Rekomendasi Terbaru'}
+                                : 'Perumahan Terbaru'}
                     </h2>
                     {(filters.keyword || filters.provinsi || filters.kabKota || filters.kecamatan || filters.sortByDistance) ? (
                         <button
@@ -530,38 +530,39 @@ const HomePage: React.FC<HomePageProps> = ({ onNavigate, onStartKpr }) => {
                         let isActive = false;
                         if (chip.id === 'semua') isActive = !filters.sortByDistance && !filters.jenisPerumahan;
                         if (chip.id === 'terdekat') isActive = !!filters.sortByDistance;
-                        if (chip.id === 'tapak') isActive = filters.jenisPerumahan === 'tapak';
-                        if (chip.id === 'susun') isActive = filters.jenisPerumahan === 'susun';
+                        if (chip.id === 'tapak') isActive = filters.jenisPerumahan === 'Rumah Tapak';
+                        if (chip.id === 'susun') isActive = filters.jenisPerumahan === 'Rumah Susun';
 
                         return (
-                        <button
-                            key={chip.id}
-                            onClick={() => {
-                                if (chip.id === 'semua') {
-                                    setFilters(prev => ({ ...prev, sortByDistance: false, jenisPerumahan: undefined }));
-                                } else if (chip.id === 'terdekat') {
-                                    setFilters(prev => ({ ...prev, sortByDistance: true, jenisPerumahan: undefined }));
-                                } else if (chip.id === 'tapak') {
-                                    setFilters(prev => ({ ...prev, sortByDistance: false, jenisPerumahan: 'tapak' }));
-                                } else if (chip.id === 'susun') {
-                                    setFilters(prev => ({ ...prev, sortByDistance: false, jenisPerumahan: 'susun' }));
-                                }
-                            }}
-                            style={{
-                                padding: '6px 16px',
-                                borderRadius: '20px',
-                                fontSize: '0.75rem',
-                                fontWeight: 700,
-                                whiteSpace: 'nowrap',
-                                backgroundColor: isActive ? 'var(--primary)' : '#F3F4F6',
-                                color: isActive ? 'white' : '#4B5563',
-                                border: 'none',
-                                cursor: 'pointer',
-                            }}
-                        >
-                            {chip.label}
-                        </button>
-                    )})}
+                            <button
+                                key={chip.id}
+                                onClick={() => {
+                                    if (chip.id === 'semua') {
+                                        setFilters(prev => ({ ...prev, sortByDistance: false, jenisPerumahan: undefined }));
+                                    } else if (chip.id === 'terdekat') {
+                                        setFilters(prev => ({ ...prev, sortByDistance: true, jenisPerumahan: undefined }));
+                                    } else if (chip.id === 'tapak') {
+                                        setFilters(prev => ({ ...prev, sortByDistance: false, jenisPerumahan: 'Rumah Tapak' }));
+                                    } else if (chip.id === 'susun') {
+                                        setFilters(prev => ({ ...prev, sortByDistance: false, jenisPerumahan: 'Rumah Susun' }));
+                                    }
+                                }}
+                                style={{
+                                    padding: '6px 16px',
+                                    borderRadius: '20px',
+                                    fontSize: '0.75rem',
+                                    fontWeight: 700,
+                                    whiteSpace: 'nowrap',
+                                    backgroundColor: isActive ? 'var(--primary)' : '#F3F4F6',
+                                    color: isActive ? 'white' : '#4B5563',
+                                    border: 'none',
+                                    cursor: 'pointer',
+                                }}
+                            >
+                                {chip.label}
+                            </button>
+                        )
+                    })}
                 </div>
 
                 {loading && (
