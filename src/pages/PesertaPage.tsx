@@ -53,7 +53,7 @@ const PesertaPage: React.FC<{ onNavigate: (path: string) => void }> = ({ onNavig
                 </div>
 
                 <div style={{ padding: '1rem', marginTop: '2rem', textAlign: 'center' }}>
-                    <p>Silakan login terlebih dahulu untuk mengakses layanan BP Tapera.</p>
+                    <p>Silakan login terlebih dahulu untuk mengakses layanan Kepesertaan BP Tapera.</p>
                 </div>
             </div>
         );

@@ -42,6 +42,31 @@ const HomePage: React.FC<HomePageProps> = ({ onNavigate, onStartKpr }) => {
     const [loginInput, setLoginInput] = useState({ name: '', nik: '', password: '', email: '' });
     const [showWishlist, setShowWishlist] = useState(false);
     const userMenuRef = useRef<HTMLDivElement>(null);
+    const [visibleCount, setVisibleCount] = useState(10);
+    const observerTarget = useRef<HTMLDivElement>(null);
+
+    // Reset visible count when filters change
+    useEffect(() => {
+        setVisibleCount(10);
+    }, [filters, properties]);
+
+    // Intersection observer for infinite scroll
+    useEffect(() => {
+        const observer = new IntersectionObserver(
+            entries => {
+                if (entries[0].isIntersecting) {
+                    setVisibleCount(prev => prev + 10);
+                }
+            },
+            { rootMargin: '100px' }
+        );
+        
+        if (observerTarget.current) {
+            observer.observe(observerTarget.current);
+        }
+        
+        return () => observer.disconnect();
+    }, [properties, visibleCount]);
 
     // Close dropdown when clicking outside
     useEffect(() => {
@@ -179,7 +204,6 @@ const HomePage: React.FC<HomePageProps> = ({ onNavigate, onStartKpr }) => {
             navigator.geolocation.getCurrentPosition(
                 (pos) => {
                     setUserCoords({ lat: pos.coords.latitude, lng: pos.coords.longitude });
-                    setFilters(prev => ({ ...prev, sortByDistance: true }));
                 },
                 (err) => {
                     console.error('Geolocation error:', err);
@@ -561,16 +585,27 @@ const HomePage: React.FC<HomePageProps> = ({ onNavigate, onStartKpr }) => {
                 )}
 
                 {!loading && !error && filteredProperties.length > 0 && (
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '12px' }}>
-                        {filteredProperties.map(property => (
-                            <PropertyCard
-                                key={property.id}
-                                property={property}
-                                onClick={(id) => onNavigate('detail', id)}
-                                variant="grid"
-                            />
-                        ))}
-                    </div>
+                    <>
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '12px' }}>
+                            {filteredProperties.slice(0, visibleCount).map(property => (
+                                <PropertyCard
+                                    key={property.id}
+                                    property={property}
+                                    onClick={(id) => onNavigate('detail', id)}
+                                    variant="grid"
+                                />
+                            ))}
+                        </div>
+                        {visibleCount < filteredProperties.length && (
+                            <div ref={observerTarget} style={{ padding: '1.5rem 0', textAlign: 'center' }}>
+                                <div style={{
+                                    width: '24px', height: '24px', border: '3px solid var(--border-color)',
+                                    borderTopColor: 'var(--primary)', borderRadius: '50%',
+                                    animation: 'spin 0.8s linear infinite', margin: '0 auto',
+                                }} />
+                            </div>
+                        )}
+                    </>
                 )}
 
                 {!loading && !error && filteredProperties.length === 0 && (
