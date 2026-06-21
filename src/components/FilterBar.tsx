@@ -35,7 +35,7 @@ const FilterBar: React.FC<FilterBarProps> = ({
                     style={{ whiteSpace: 'nowrap', borderRadius: 'var(--radius-full)', padding: '0.4rem 1rem', fontSize: '14px' }}
                     onClick={() => setFilterType('All')}
                 >
-                    Semua
+                    Terbaru
                 </button>
                 <button
                     className={`btn ${filterType === 'Subsidi' ? 'btn-primary' : 'btn-outline'}`}

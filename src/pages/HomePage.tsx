@@ -498,7 +498,7 @@ const HomePage: React.FC<HomePageProps> = ({ onNavigate, onStartKpr }) => {
                 <div style={{ display: 'flex', gap: '8px', overflowX: 'auto', marginBottom: '1.25rem', paddingBottom: '4px', msOverflowStyle: 'none', scrollbarWidth: 'none' }}>
                     <style>{`div::-webkit-scrollbar { display: none; }`}</style>
                     {[
-                        { label: 'Semua', id: 'semua' },
+                        { label: 'Terbaru', id: 'semua' },
                         { label: 'Terdekat', id: 'terdekat' },
                         { label: 'Rumah Tapak', id: 'tapak' },
                         { label: 'Rumah Susun', id: 'susun' }
