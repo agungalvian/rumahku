@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import PropertyCard from '../components/PropertyCard';
 import { useAppContext } from '../context/AppContext';
 import { useProperties } from '../hooks/useProperties';
-import { Search, MapPin, ChevronRight, Bookmark, Bell, User, LogOut, UserPlus, LogIn, ChevronLeft, RefreshCw, Mail } from 'lucide-react';
+import { Search, MapPin, ChevronRight, Bookmark, Bell, User, LogOut, UserPlus, LogIn, ChevronLeft, RefreshCw, Mail, Heart } from 'lucide-react';
 
 interface HomePageProps {
     onNavigate: (page: string, id?: string) => void;
@@ -212,13 +212,6 @@ const HomePage: React.FC<HomePageProps> = ({ onNavigate, onStartKpr }) => {
                 padding: '0.75rem 1rem 1rem',
             }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                    <div style={{
-                        display: 'flex', alignItems: 'center', justifyContent: 'center',
-                        backgroundColor: 'white', padding: '4px', borderRadius: '10px',
-                        boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
-                    }}>
-                        <img src="/logo.png" alt="Rumahku" style={{ height: '28px', width: '28px', objectFit: 'contain' }} />
-                    </div>
                     <div style={{ flex: 1, position: 'relative' }}>
                         <Search
                             size={18}
@@ -239,7 +232,7 @@ const HomePage: React.FC<HomePageProps> = ({ onNavigate, onStartKpr }) => {
                         />
                     </div>
                     {[
-                        { Icon: Bookmark, badge: wishlist.length, onClick: () => setShowWishlist(true) },
+                        { Icon: Heart, badge: wishlist.length, onClick: () => setShowWishlist(true) },
                         { Icon: Bell, badge: notifications.length, onClick: () => setShowNotifPanel(true) }
                     ].map(({ Icon, badge, onClick }, i) => (
                         <button
@@ -319,8 +312,9 @@ const HomePage: React.FC<HomePageProps> = ({ onNavigate, onStartKpr }) => {
             </div>
 
             {/* ── Auto-sliding Banner Carousel ── */}
-            <div style={{ position: 'relative', overflow: 'hidden', backgroundColor: '#f3f4f6' }}>
-                {/* Slide content */}
+            <div style={{ padding: '1rem', backgroundColor: 'var(--bg-color)' }}>
+                <div style={{ position: 'relative', overflow: 'hidden', backgroundColor: '#f3f4f6', borderRadius: '16px' }}>
+                    {/* Slide content */}
                 <div
                     style={{
                         display: 'flex',
@@ -394,18 +388,20 @@ const HomePage: React.FC<HomePageProps> = ({ onNavigate, onStartKpr }) => {
                     ))}
                 </div>
             </div>
-
-
+            </div>
             {/* ── Service Menu ── */}
             <div style={{
-                backgroundColor: 'white',
-                padding: '0.75rem 0',
+                backgroundColor: 'var(--bg-color)',
+                padding: '0.25rem 0 1rem',
                 marginBottom: '0.5rem',
-                overflowX: 'auto',
-                WebkitOverflowScrolling: 'touch',
-                msOverflowStyle: 'none',
-                scrollbarWidth: 'none',
             }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 1rem', marginBottom: '0.75rem' }}>
+                    <h2 style={{ fontSize: '1.05rem', fontWeight: 800, color: '#111827' }}>Layanan</h2>
+                    <button style={{ fontSize: '0.75rem', color: 'var(--primary)', fontWeight: 600, background: 'none', border: 'none' }}>
+                        Lihat Semua
+                    </button>
+                </div>
+                <div style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch', msOverflowStyle: 'none', scrollbarWidth: 'none' }}>
                 <style>{`
                     .service-scroll-container::-webkit-scrollbar {
                         display: none;
@@ -469,19 +465,20 @@ const HomePage: React.FC<HomePageProps> = ({ onNavigate, onStartKpr }) => {
                         </button>
                     ))}
                 </div>
+                </div>
             </div>
 
             {/* ── Property List ── */}
             <div style={{ padding: '0 1rem' }}>
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.75rem' }}>
-                    <h2 style={{ fontSize: '1.05rem', fontWeight: 700, color: '#111827' }}>
+                    <h2 style={{ fontSize: '1.05rem', fontWeight: 800, color: '#111827' }}>
                         {filters.sortByDistance
                             ? 'Rumah Terdekat'
                             : filters.keyword || filters.provinsi || filters.kabKota || filters.kecamatan
                                 ? 'Hasil Pencarian'
                                 : 'Rekomendasi Terbaru'}
                     </h2>
-                    {(filters.keyword || filters.provinsi || filters.kabKota || filters.kecamatan || filters.sortByDistance) && (
+                    {(filters.keyword || filters.provinsi || filters.kabKota || filters.kecamatan || filters.sortByDistance) ? (
                         <button
                             onClick={() => {
                                 setFilters({});
@@ -491,7 +488,56 @@ const HomePage: React.FC<HomePageProps> = ({ onNavigate, onStartKpr }) => {
                         >
                             ✕ Hapus Filter
                         </button>
+                    ) : (
+                        <button style={{ fontSize: '0.75rem', color: 'var(--primary)', fontWeight: 600, background: 'none', border: 'none' }}>
+                            Lihat Semua
+                        </button>
                     )}
+                </div>
+
+                <div style={{ display: 'flex', gap: '8px', overflowX: 'auto', marginBottom: '1.25rem', paddingBottom: '4px', msOverflowStyle: 'none', scrollbarWidth: 'none' }}>
+                    <style>{`div::-webkit-scrollbar { display: none; }`}</style>
+                    {[
+                        { label: 'Semua', id: 'semua' },
+                        { label: 'Terdekat', id: 'terdekat' },
+                        { label: 'Rumah Tapak', id: 'tapak' },
+                        { label: 'Rumah Susun', id: 'susun' }
+                    ].map((chip) => {
+                        let isActive = false;
+                        if (chip.id === 'semua') isActive = !filters.sortByDistance && !filters.jenisPerumahan;
+                        if (chip.id === 'terdekat') isActive = !!filters.sortByDistance;
+                        if (chip.id === 'tapak') isActive = filters.jenisPerumahan === 'tapak';
+                        if (chip.id === 'susun') isActive = filters.jenisPerumahan === 'susun';
+
+                        return (
+                        <button
+                            key={chip.id}
+                            onClick={() => {
+                                if (chip.id === 'semua') {
+                                    setFilters(prev => ({ ...prev, sortByDistance: false, jenisPerumahan: undefined }));
+                                } else if (chip.id === 'terdekat') {
+                                    setFilters(prev => ({ ...prev, sortByDistance: true, jenisPerumahan: undefined }));
+                                } else if (chip.id === 'tapak') {
+                                    setFilters(prev => ({ ...prev, sortByDistance: false, jenisPerumahan: 'tapak' }));
+                                } else if (chip.id === 'susun') {
+                                    setFilters(prev => ({ ...prev, sortByDistance: false, jenisPerumahan: 'susun' }));
+                                }
+                            }}
+                            style={{
+                                padding: '6px 16px',
+                                borderRadius: '20px',
+                                fontSize: '0.75rem',
+                                fontWeight: 700,
+                                whiteSpace: 'nowrap',
+                                backgroundColor: isActive ? 'var(--primary)' : '#F3F4F6',
+                                color: isActive ? 'white' : '#4B5563',
+                                border: 'none',
+                                cursor: 'pointer',
+                            }}
+                        >
+                            {chip.label}
+                        </button>
+                    )})}
                 </div>
 
                 {loading && (
@@ -514,13 +560,18 @@ const HomePage: React.FC<HomePageProps> = ({ onNavigate, onStartKpr }) => {
                     </div>
                 )}
 
-                {!loading && !error && filteredProperties.map(property => (
-                    <PropertyCard
-                        key={property.id}
-                        property={property}
-                        onClick={(id) => onNavigate('detail', id)}
-                    />
-                ))}
+                {!loading && !error && filteredProperties.length > 0 && (
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '12px' }}>
+                        {filteredProperties.map(property => (
+                            <PropertyCard
+                                key={property.id}
+                                property={property}
+                                onClick={(id) => onNavigate('detail', id)}
+                                variant="grid"
+                            />
+                        ))}
+                    </div>
+                )}
 
                 {!loading && !error && filteredProperties.length === 0 && (
                     <div style={{ textAlign: 'center', padding: '2rem 0', color: 'var(--text-muted)' }}>

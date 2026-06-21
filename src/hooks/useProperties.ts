@@ -129,7 +129,8 @@ const mapToProperty = (lokasi: TaperaLokasi): Property | null => {
         isPromo: false,
         developerName: lokasi.pengembang?.nama,
         phoneContact: lokasi.kantorPemasaran?.[0]?.noTelp,
-    } as Property & { developerName?: string; phoneContact?: string };
+        jenisPerumahan: lokasi.jenisPerumahan,
+    } as Property & { developerName?: string; phoneContact?: string; jenisPerumahan?: string };
 };
 
 // ─── Hook ────────────────────────────────────────────────────────────────────
@@ -256,6 +257,14 @@ export const useProperties = (): UsePropertiesResult => {
                     if (filters.kecamatan) {
                         const kec = filters.kecamatan.toLowerCase();
                         mapped = mapped.filter(p => p.location.toLowerCase().includes(kec));
+                    }
+                    if (filters.jenisPerumahan) {
+                        const jp = filters.jenisPerumahan.toLowerCase();
+                        mapped = mapped.filter(p => {
+                            const pType = (p as any).jenisPerumahan?.toLowerCase() || '';
+                            // Some basic matching, e.g. "tapak" or "susun"
+                            return pType.includes(jp);
+                        });
                     }
 
                     // Inject distance if userCoords available

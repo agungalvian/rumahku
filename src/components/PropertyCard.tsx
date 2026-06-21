@@ -6,9 +6,10 @@ import { Heart, MapPin, BedDouble, Bath, Maximize } from 'lucide-react';
 interface PropertyCardProps {
     property: Property;
     onClick: (id: string) => void;
+    variant?: 'list' | 'grid';
 }
 
-const PropertyCard: React.FC<PropertyCardProps> = ({ property, onClick }) => {
+const PropertyCard: React.FC<PropertyCardProps> = ({ property, onClick, variant = 'list' }) => {
     const { wishlist, addToWishlist, removeFromWishlist } = useAppContext();
     const isWishlisted = wishlist.includes(property.id);
 
@@ -35,7 +36,7 @@ const PropertyCard: React.FC<PropertyCardProps> = ({ property, onClick }) => {
                 <img
                     src={property.imageUrl}
                     alt={property.title}
-                    style={{ width: '100%', height: '200px', objectFit: 'cover' }}
+                    style={{ width: '100%', aspectRatio: variant === 'grid' ? '1 / 1' : 'auto', height: variant === 'grid' ? 'auto' : '200px', objectFit: 'cover' }}
                 />
                 {property.type === 'Subsidi' && (
                     <div style={{
@@ -69,9 +70,9 @@ const PropertyCard: React.FC<PropertyCardProps> = ({ property, onClick }) => {
                     )}
                 </div>
 
-                <h3 className="font-bold text-lg mb-1">{property.title}</h3>
-                <p className="flex items-center gap-1 text-sm text-muted mb-2">
-                    <MapPin size={14} /> {property.location}
+                <h3 className={`font-bold ${variant === 'grid' ? 'text-sm' : 'text-lg'} mb-1`} style={{ whiteSpace: variant === 'grid' ? 'nowrap' : 'normal', overflow: 'hidden', textOverflow: 'ellipsis' }}>{property.title}</h3>
+                <p className="flex items-center gap-1 text-xs text-muted mb-2" style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                    <MapPin size={12} style={{ flexShrink: 0 }} /> <span style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>{property.location}</span>
                     {property.distance !== undefined && (
                         <span style={{ marginLeft: 'auto', fontWeight: 600, color: 'var(--primary)' }}>
                             {property.distance.toFixed(1)} km
@@ -79,10 +80,10 @@ const PropertyCard: React.FC<PropertyCardProps> = ({ property, onClick }) => {
                     )}
                 </p>
 
-                <div className="flex gap-4 mb-3 text-sm text-muted">
-                    <div className="flex items-center gap-1"><BedDouble size={16} /> {property.specifications.bedrooms} KT</div>
-                    <div className="flex items-center gap-1"><Bath size={16} /> {property.specifications.bathrooms} KM</div>
-                    <div className="flex items-center gap-1"><Maximize size={16} /> {property.specifications.landArea}m²</div>
+                <div className={`flex ${variant === 'grid' ? 'gap-2 flex-wrap' : 'gap-4'} mb-3 text-xs text-muted`}>
+                    <div className="flex items-center gap-1"><BedDouble size={14} /> {property.specifications.bedrooms}</div>
+                    <div className="flex items-center gap-1"><Bath size={14} /> {property.specifications.bathrooms}</div>
+                    <div className="flex items-center gap-1"><Maximize size={14} /> {property.specifications.landArea}m²</div>
                 </div>
 
                 <div>
@@ -91,7 +92,7 @@ const PropertyCard: React.FC<PropertyCardProps> = ({ property, onClick }) => {
                             {formatPrice(property.oldPrice)}
                         </div>
                     )}
-                    <div className="font-bold text-xl text-primary">
+                    <div className={`font-bold ${variant === 'grid' ? 'text-base' : 'text-xl'} text-primary`}>
                         {formatPrice(property.price)}
                     </div>
                 </div>

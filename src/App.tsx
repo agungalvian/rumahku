@@ -13,7 +13,7 @@ import DaftarMandiri from './pages/peserta/DaftarMandiri';
 import KbrPage from './pages/KbrPage';
 import KrrPage from './pages/KrrPage';
 import EklaimPage from './pages/EklaimPage';
-import { LayoutGrid, Calculator, CalendarCheck, MessageCircle, RefreshCw, IdCard } from 'lucide-react';
+import { RefreshCw, Home, Users, Search, Clock, LifeBuoy } from 'lucide-react';
 import { useAppContext } from './context/AppContext';
 import { usePWAUpdate } from './hooks/usePWAUpdate';
 
@@ -81,11 +81,11 @@ function App() {
   };
 
   const tabs = [
-    { key: 'home', label: 'Eksplor', Icon: LayoutGrid },
-    { key: 'peserta', label: 'Peserta', Icon: IdCard },
-    { key: 'simulasi', label: 'Simulasi', Icon: Calculator },
-    { key: 'tracker', label: 'Riwayat', Icon: CalendarCheck },
-    { key: 'konsultasi', label: 'Konsultasi', Icon: MessageCircle },
+    { key: 'home', label: 'Beranda', Icon: Home },
+    { key: 'peserta', label: 'Peserta', Icon: Users },
+    { key: 'search', label: 'Cari Rumah', Icon: Search },
+    { key: 'tracker', label: 'Riwayat', Icon: Clock },
+    { key: 'konsultasi', label: 'Bantuan', Icon: LifeBuoy },
   ] as const;
 
   const tabPages = tabs.map(t => t.key) as string[];
