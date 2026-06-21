@@ -161,6 +161,7 @@ export interface PropertyFilters {
     kabKota?: string;
     kecamatan?: string;
     jenisPerumahan?: string;
+    tipeProperti?: string;
     sortByDistance?: boolean;
 }
 
@@ -266,6 +267,10 @@ export const useProperties = (): UsePropertiesResult => {
                             // Some basic matching, e.g. "tapak" or "susun"
                             return pType.includes(jp);
                         });
+                    }
+                    if (filters.tipeProperti) {
+                        const tp = filters.tipeProperti.toLowerCase();
+                        mapped = mapped.filter(p => p.type.toLowerCase().includes(tp));
                     }
 
                     // Inject distance if userCoords available

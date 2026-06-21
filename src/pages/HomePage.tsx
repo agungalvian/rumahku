@@ -3,6 +3,7 @@ import PropertyCard from '../components/PropertyCard';
 import { useAppContext } from '../context/AppContext';
 import { useProperties } from '../hooks/useProperties';
 import { Search, MapPin, ChevronRight, Bookmark, Bell, User, LogOut, UserPlus, LogIn, ChevronLeft, RefreshCw, Mail, Heart } from 'lucide-react';
+import { RiHome5Fill } from 'react-icons/ri';
 
 interface HomePageProps {
     onNavigate: (page: string, id?: string) => void;
@@ -420,7 +421,7 @@ const HomePage: React.FC<HomePageProps> = ({ onNavigate, onStartKpr }) => {
                 marginBottom: '0.5rem',
             }}>
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 1rem', marginBottom: '0.75rem' }}>
-                    <h2 style={{ fontSize: '1.05rem', fontWeight: 800, color: '#111827' }}>rumah.go.id</h2>
+                    <h2 style={{ fontSize: '1rem', fontWeight: 800, color: '#111827' }}>Layanan</h2>
                     <button style={{ fontSize: '0.75rem', color: 'var(--primary)', fontWeight: 600, background: 'none', border: 'none' }}>
                         Lihat Semua
                     </button>
@@ -495,12 +496,9 @@ const HomePage: React.FC<HomePageProps> = ({ onNavigate, onStartKpr }) => {
             {/* ── Property List ── */}
             <div style={{ padding: '0 1rem' }}>
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.75rem' }}>
-                    <h2 style={{ fontSize: '1.05rem', fontWeight: 800, color: '#111827' }}>
-                        {filters.sortByDistance
-                            ? 'Rumah Terdekat'
-                            : filters.keyword || filters.provinsi || filters.kabKota || filters.kecamatan
-                                ? 'Hasil Pencarian'
-                                : 'Perumahan Terbaru'}
+                    <h2 style={{ fontSize: '1.3rem', fontWeight: 800, color: '#156d38', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                        <RiHome5Fill size={20} color="var(--primary)" />
+                        <span>rumah<span style={{ fontSize: '0.75em', fontWeight: 400, color: '#156d38' }}>.go.id</span></span>
                     </h2>
                     {(filters.keyword || filters.provinsi || filters.kabKota || filters.kecamatan || filters.sortByDistance) ? (
                         <button
@@ -524,27 +522,31 @@ const HomePage: React.FC<HomePageProps> = ({ onNavigate, onStartKpr }) => {
                     {[
                         { label: 'Terbaru', id: 'semua' },
                         { label: 'Terdekat', id: 'terdekat' },
-                        { label: 'Rumah Tapak', id: 'tapak' },
-                        { label: 'Rumah Susun', id: 'susun' }
+                        { label: 'Tapak', id: 'tapak' },
+                        { label: 'Susun', id: 'susun' },
+                        { label: 'Komersil', id: 'komersil' }
                     ].map((chip) => {
                         let isActive = false;
-                        if (chip.id === 'semua') isActive = !filters.sortByDistance && !filters.jenisPerumahan;
+                        if (chip.id === 'semua') isActive = !filters.sortByDistance && !filters.jenisPerumahan && !filters.tipeProperti;
                         if (chip.id === 'terdekat') isActive = !!filters.sortByDistance;
                         if (chip.id === 'tapak') isActive = filters.jenisPerumahan === 'Rumah Tapak';
                         if (chip.id === 'susun') isActive = filters.jenisPerumahan === 'Rumah Susun';
+                        if (chip.id === 'komersil') isActive = filters.tipeProperti === 'Komersial';
 
                         return (
                             <button
                                 key={chip.id}
                                 onClick={() => {
                                     if (chip.id === 'semua') {
-                                        setFilters(prev => ({ ...prev, sortByDistance: false, jenisPerumahan: undefined }));
+                                        setFilters(prev => ({ ...prev, sortByDistance: false, jenisPerumahan: undefined, tipeProperti: undefined }));
                                     } else if (chip.id === 'terdekat') {
-                                        setFilters(prev => ({ ...prev, sortByDistance: true, jenisPerumahan: undefined }));
+                                        setFilters(prev => ({ ...prev, sortByDistance: true, jenisPerumahan: undefined, tipeProperti: undefined }));
                                     } else if (chip.id === 'tapak') {
-                                        setFilters(prev => ({ ...prev, sortByDistance: false, jenisPerumahan: 'Rumah Tapak' }));
+                                        setFilters(prev => ({ ...prev, sortByDistance: false, jenisPerumahan: 'Rumah Tapak', tipeProperti: undefined }));
                                     } else if (chip.id === 'susun') {
-                                        setFilters(prev => ({ ...prev, sortByDistance: false, jenisPerumahan: 'Rumah Susun' }));
+                                        setFilters(prev => ({ ...prev, sortByDistance: false, jenisPerumahan: 'Rumah Susun', tipeProperti: undefined }));
+                                    } else if (chip.id === 'komersil') {
+                                        setFilters(prev => ({ ...prev, sortByDistance: false, jenisPerumahan: undefined, tipeProperti: 'Komersial' }));
                                     }
                                 }}
                                 style={{

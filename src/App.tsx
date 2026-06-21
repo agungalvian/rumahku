@@ -125,6 +125,8 @@ function App() {
         }}>
           {tabs.map(({ key, label, Icon }) => {
             const isActive = currentPage === key;
+            const isSearchBtn = key === 'search';
+
             return (
               <button
                 key={key}
@@ -138,12 +140,36 @@ function App() {
                   padding: '10px 4px 14px',
                   color: isActive ? 'var(--primary)' : 'var(--text-muted)',
                   gap: '4px',
-                  borderTop: isActive ? '3px solid var(--primary)' : '3px solid transparent',
+                  borderTop: (!isSearchBtn && isActive) ? '3px solid var(--primary)' : '3px solid transparent',
                   transition: 'all 0.2s ease',
                   backgroundColor: 'transparent',
+                  position: 'relative',
                 }}
               >
-                <Icon size={22} strokeWidth={isActive ? 2.5 : 1.8} />
+                {isSearchBtn ? (
+                    <div style={{
+                        position: 'absolute',
+                        top: '-22px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        width: '56px',
+                        height: '56px',
+                        borderRadius: '50%',
+                        backgroundColor: 'var(--primary)',
+                        color: 'white',
+                        boxShadow: '0 4px 12px rgba(21, 108, 56, 0.4)',
+                        border: '4px solid white',
+                    }}>
+                        <Icon size={28} strokeWidth={2.5} />
+                    </div>
+                ) : (
+                    <Icon size={22} strokeWidth={isActive ? 2.5 : 1.8} />
+                )}
+
+                {/* For Search button, add an invisible spacer so the text aligns with other tabs */}
+                {isSearchBtn && <div style={{ height: '22px' }} />}
+
                 <span style={{ fontSize: '0.65rem', fontWeight: isActive ? 700 : 500, lineHeight: 1 }}>
                   {label}
                 </span>
