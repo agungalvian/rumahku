@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import type { Property, PropertyType } from '../data/mockData';
 
 // ─── API shape ───────────────────────────────────────────────────────────────
@@ -184,33 +184,82 @@ export interface UsePropertiesResult {
     wilayahOptions: WilayahOptions;
 }
 
+// ── Global Store for Caching & State ────────────────────────────────────────
+
+interface CacheEntry {
+    rawData: any[];
+    timestamp: number;
+}
+const apiCache: Record<string, CacheEntry> = {};
+
+let globalFilters: PropertyFilters = {};
+let globalUserCoords: { lat: number; lng: number } | null = null;
+let globalRawData: any[] = [];
+let globalLoading = true;
+let globalError: string | null = null;
+
+const listeners = new Set<() => void>();
+const notify = () => listeners.forEach(l => l());
+
 export const useProperties = (): UsePropertiesResult => {
-    const [properties, setProperties] = useState<Property[]>([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
-    const [filters, setFilters] = useState<PropertyFilters>({});
-    const [wilayahOptions, setWilayahOptions] = useState<WilayahOptions>({ provinsi: [], kabKota: {}, kecamatan: {} });
-    const [userCoords, setUserCoords] = useState<{ lat: number; lng: number } | null>(null);
-    const [tick, setTick] = useState(0);
+    const [, forceRender] = useState(0);
+
+    // Subscribe to global state changes
+    useEffect(() => {
+        const handler = () => forceRender(t => t + 1);
+        listeners.add(handler);
+        return () => { listeners.delete(handler); };
+    }, []);
+
+    const setFilters = useCallback((updater: PropertyFilters | ((prev: PropertyFilters) => PropertyFilters)) => {
+        globalFilters = typeof updater === 'function' ? updater(globalFilters) : updater;
+        notify();
+    }, []);
+
+    const setUserCoords = useCallback((coords: { lat: number; lng: number } | null) => {
+        globalUserCoords = coords;
+        notify();
+    }, []);
+
+    const refetch = useCallback(() => {
+        const cacheKey = `${globalFilters.jenisPerumahan || 'terbaru'}-${globalFilters.limit || 10}`;
+        delete apiCache[cacheKey];
+        notify();
+    }, []);
 
     useEffect(() => {
         let cancelled = false;
 
         const fetchData = async () => {
-            setLoading(true);
-            setError(null);
+            const cacheKey = `${globalFilters.jenisPerumahan || 'terbaru'}-${globalFilters.limit || 10}`;
+
+            // Check cache (valid for 5 minutes)
+            if (apiCache[cacheKey] && Date.now() - apiCache[cacheKey].timestamp < 5 * 60 * 1000) {
+                if (globalRawData !== apiCache[cacheKey].rawData || globalLoading) {
+                    globalRawData = apiCache[cacheKey].rawData;
+                    globalLoading = false;
+                    globalError = null;
+                    notify();
+                }
+                return;
+            }
+
+            globalLoading = true;
+            globalError = null;
+            notify();
+
             try {
                 const params = new URLSearchParams({
                     page: '1',
-                    limit: (filters.limit || 10).toString(),
+                    limit: (globalFilters.limit || 10).toString(),
                 });
 
-                if (filters.jenisPerumahan === 'Rumah Susun') {
+                if (globalFilters.jenisPerumahan === 'Rumah Susun') {
                     params.append('selectedSearch', 'wilayah');
                     params.append('skalaPerumahan', 'semua');
                     params.append('sort', 'susun-dahulu');
                     params.append('searchBy', 'nama-perumahan');
-                } else if (filters.jenisPerumahan === 'Rumah Tapak') {
+                } else if (globalFilters.jenisPerumahan === 'Rumah Tapak') {
                     params.append('selectedSearch', 'wilayah');
                     params.append('skalaPerumahan', 'semua');
                     params.append('sort', 'tapak-dahulu');
@@ -219,113 +268,126 @@ export const useProperties = (): UsePropertiesResult => {
                     params.append('sort', 'terbaru');
                 }
 
-                // NOTE: Tapera API requires specific sort params for Tapak/Susun, 
-                // other filters (keyword, wilayah) are still done client-side below.
-
                 const res = await fetch(`/api/tapera/ajax/lokasi/search?${params.toString()}`, {
                     headers: { Accept: 'application/json' },
                 });
+                
                 if (!res.ok) throw new Error(`HTTP ${res.status}`);
                 const json: TaperaApiResponse = await res.json();
+                
                 if (!cancelled) {
                     const rawData = json.data ?? [];
-                    let mapped = rawData
-                        .map(mapToProperty)
-                        .filter((p): p is Property => p !== null);
-
-                    // ── Build wilayah options from raw API data ─────────────
-                    const provSet = new Set<string>();
-                    const kabByProv: { [prov: string]: Set<string> } = {};
-                    const kecByKab: { [kab: string]: Set<string> } = {};
-                    rawData.forEach(item => {
-                        const { provinsi, kabupaten, kecamatan } = item.wilayah ?? {};
-                        if (provinsi) {
-                            provSet.add(provinsi);
-                            if (!kabByProv[provinsi]) kabByProv[provinsi] = new Set();
-                            if (kabupaten) {
-                                kabByProv[provinsi].add(kabupaten);
-                                if (!kecByKab[kabupaten]) kecByKab[kabupaten] = new Set();
-                                if (kecamatan) kecByKab[kabupaten].add(kecamatan);
-                            }
-                        }
-                    });
-                    setWilayahOptions({
-                        provinsi: [...provSet].sort(),
-                        kabKota: Object.fromEntries(Object.entries(kabByProv).map(([k, v]) => [k, [...v].sort()])),
-                        kecamatan: Object.fromEntries(Object.entries(kecByKab).map(([k, v]) => [k, [...v].sort()])),
-                    });
-
-                    // ── Client-side filtering ──────────────────────────────
-                    if (filters.keyword) {
-                        const kw = filters.keyword.toLowerCase();
-                        mapped = mapped.filter(p =>
-                            p.title.toLowerCase().includes(kw) ||
-                            p.location.toLowerCase().includes(kw)
-                        );
-                    }
-                    if (filters.provinsi) {
-                        const prov = filters.provinsi.toLowerCase();
-                        mapped = mapped.filter(p => p.location.toLowerCase().includes(prov));
-                    }
-                    if (filters.kabKota) {
-                        const kab = filters.kabKota.toLowerCase();
-                        mapped = mapped.filter(p => p.location.toLowerCase().includes(kab));
-                    }
-                    if (filters.kecamatan) {
-                        const kec = filters.kecamatan.toLowerCase();
-                        mapped = mapped.filter(p => p.location.toLowerCase().includes(kec));
-                    }
-                    if (filters.jenisPerumahan) {
-                        const jp = filters.jenisPerumahan.toLowerCase();
-                        mapped = mapped.filter(p => {
-                            const pType = (p as any).jenisPerumahan?.toLowerCase() || '';
-                            // Some basic matching, e.g. "tapak" or "susun"
-                            return pType.includes(jp);
-                        });
-                    }
-                    if (filters.tipeProperti) {
-                        const tp = filters.tipeProperti.toLowerCase();
-                        mapped = mapped.filter(p => p.type.toLowerCase().includes(tp));
-                    }
-
-                    // Inject distance if userCoords available
-                    if (userCoords) {
-                        mapped = mapped.map(p => {
-                            const dist = calculateDistance(
-                                userCoords.lat,
-                                userCoords.lng,
-                                p.coordinates.lat,
-                                p.coordinates.lng
-                            );
-                            return {
-                                ...p,
-                                distance: dist,
-                                features: [...p.features, `${dist.toFixed(1)} km dari Anda`]
-                            };
-                        });
-
-                        if (filters.sortByDistance) {
-                            mapped.sort((a, b) => (a.distance || 0) - (b.distance || 0));
-                        }
-                    }
-
-                    setProperties(mapped);
+                    apiCache[cacheKey] = { rawData, timestamp: Date.now() };
+                    globalRawData = rawData;
+                    globalError = null;
                 }
             } catch (err) {
                 if (!cancelled) {
-                    setError(err instanceof Error ? err.message : 'Gagal memuat data');
+                    globalError = err instanceof Error ? err.message : 'Gagal memuat data';
                 }
             } finally {
-                if (!cancelled) setLoading(false);
+                if (!cancelled) {
+                    globalLoading = false;
+                    notify();
+                }
             }
         };
 
         fetchData();
         return () => { cancelled = true; };
-    }, [tick, filters, userCoords]);
+    }, [globalFilters.jenisPerumahan, globalFilters.limit]); 
 
-    const refetch = () => setTick(t => t + 1);
+    const { properties, wilayahOptions } = useMemo(() => {
+        let mapped = globalRawData
+            .map(mapToProperty)
+            .filter((p): p is Property => p !== null);
 
-    return { properties, loading, error, refetch, setFilters, filters, userCoords, setUserCoords, wilayahOptions };
+        const provSet = new Set<string>();
+        const kabByProv: { [prov: string]: Set<string> } = {};
+        const kecByKab: { [kab: string]: Set<string> } = {};
+        
+        globalRawData.forEach(item => {
+            const { provinsi, kabupaten, kecamatan } = item.wilayah ?? {};
+            if (provinsi) {
+                provSet.add(provinsi);
+                if (!kabByProv[provinsi]) kabByProv[provinsi] = new Set();
+                if (kabupaten) {
+                    kabByProv[provinsi].add(kabupaten);
+                    if (!kecByKab[kabupaten]) kecByKab[kabupaten] = new Set();
+                    if (kecamatan) kecByKab[kabupaten].add(kecamatan);
+                }
+            }
+        });
+        
+        const wOptions = {
+            provinsi: [...provSet].sort(),
+            kabKota: Object.fromEntries(Object.entries(kabByProv).map(([k, v]) => [k, [...v].sort()])),
+            kecamatan: Object.fromEntries(Object.entries(kecByKab).map(([k, v]) => [k, [...v].sort()])),
+        };
 
+        if (globalFilters.keyword) {
+            const kw = globalFilters.keyword.toLowerCase();
+            mapped = mapped.filter(p =>
+                p.title.toLowerCase().includes(kw) ||
+                p.location.toLowerCase().includes(kw)
+            );
+        }
+        if (globalFilters.provinsi) {
+            const prov = globalFilters.provinsi.toLowerCase();
+            mapped = mapped.filter(p => p.location.toLowerCase().includes(prov));
+        }
+        if (globalFilters.kabKota) {
+            const kab = globalFilters.kabKota.toLowerCase();
+            mapped = mapped.filter(p => p.location.toLowerCase().includes(kab));
+        }
+        if (globalFilters.kecamatan) {
+            const kec = globalFilters.kecamatan.toLowerCase();
+            mapped = mapped.filter(p => p.location.toLowerCase().includes(kec));
+        }
+        if (globalFilters.jenisPerumahan) {
+            const jp = globalFilters.jenisPerumahan.toLowerCase();
+            mapped = mapped.filter(p => {
+                const pType = (p as any).jenisPerumahan?.toLowerCase() || '';
+                return pType.includes(jp);
+            });
+        }
+        if (globalFilters.tipeProperti) {
+            const tp = globalFilters.tipeProperti.toLowerCase();
+            mapped = mapped.filter(p => p.type.toLowerCase().includes(tp));
+        }
+
+        if (globalUserCoords) {
+            mapped = mapped.map(p => {
+                const dist = calculateDistance(
+                    globalUserCoords!.lat,
+                    globalUserCoords!.lng,
+                    p.coordinates.lat,
+                    p.coordinates.lng
+                );
+                return {
+                    ...p,
+                    distance: dist,
+                    features: [...p.features, `${dist.toFixed(1)} km dari Anda`]
+                };
+            });
+
+            if (globalFilters.sortByDistance) {
+                mapped.sort((a, b) => (a.distance || 0) - (b.distance || 0));
+            }
+        }
+
+        return { properties: mapped, wilayahOptions: wOptions };
+    }, [globalRawData, globalFilters, globalUserCoords]);
+
+    return {
+        properties,
+        loading: globalLoading,
+        error: globalError,
+        filters: globalFilters,
+        setFilters,
+        refetch,
+        userCoords: globalUserCoords,
+        setUserCoords,
+        wilayahOptions
+    };
 };
