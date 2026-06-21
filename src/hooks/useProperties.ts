@@ -200,12 +200,26 @@ export const useProperties = (): UsePropertiesResult => {
             setError(null);
             try {
                 const params = new URLSearchParams({
-                    sort: 'terbaru',
                     page: '1',
-                    limit: '300', // Increased limit to find more rare properties like Rumah Susun
+                    limit: '300', // Increased limit to find more rare properties
                 });
 
-                // NOTE: Tapera API ignores all filter params — all filtering is done client-side.
+                if (filters.jenisPerumahan === 'Rumah Susun') {
+                    params.append('selectedSearch', 'wilayah');
+                    params.append('skalaPerumahan', 'semua');
+                    params.append('sort', 'susun-dahulu');
+                    params.append('searchBy', 'nama-perumahan');
+                } else if (filters.jenisPerumahan === 'Rumah Tapak') {
+                    params.append('selectedSearch', 'wilayah');
+                    params.append('skalaPerumahan', 'semua');
+                    params.append('sort', 'tapak-dahulu');
+                    params.append('searchBy', 'nama-perumahan');
+                } else {
+                    params.append('sort', 'terbaru');
+                }
+
+                // NOTE: Tapera API requires specific sort params for Tapak/Susun, 
+                // other filters (keyword, wilayah) are still done client-side below.
 
                 const res = await fetch(`/api/tapera/ajax/lokasi/search?${params.toString()}`, {
                     headers: { Accept: 'application/json' },
