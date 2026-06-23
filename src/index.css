@@ -1,22 +1,22 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
 :root {
-  --primary: #156c38;
-  --primary-dark: #0f542a;
-  --primary-light: #e8f0ec;
-  --secondary: #10B981;
-  --secondary-light: #D1FAE5;
-  --bg-color: #FAFAFA;
-  --card-bg: #FFFFFF;
+  --primary: #2663eb;
+  --primary-dark: #1d4ed8;
+  --primary-light: #eff6ff;
+  --secondary: #3b82f6;
+  --secondary-light: #dbeafe;
+  --bg-color: #ffffff;
+  --card-bg: #ffffff;
   --text-main: #1F2937;
   --text-muted: #6B7280;
   --border-color: #E5E7EB;
   --danger: #EF4444;
   --warning: #F59E0B;
 
-  --accent: #df9b27;
-  --accent-light: #fdf6e9;
-  --gradient-primary: linear-gradient(135deg, #5bb24a 0%, #5bb24a 60%, #df9b27 100%);
+  --accent: #2563eb;
+  --accent-light: #eff6ff;
+  --gradient-primary: linear-gradient(135deg, #3b82f6 0%, #2563eb 60%, #1d4ed8 100%);
 
   --tapera: var(--primary);
   /* BP Tapera brand green */
@@ -41,7 +41,7 @@
 
 body {
   font-family: var(--font-family);
-  background-color: #e5e5e5;
+  background-color: #f3f4f6;
   /* Darker bg outside mobile view */
   color: var(--text-main);
   -webkit-font-smoothing: antialiased;

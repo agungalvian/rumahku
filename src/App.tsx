@@ -117,8 +117,8 @@ function App() {
       {isTab && (
         <div style={{
           position: 'fixed', bottom: 0, width: '100%', maxWidth: '480px',
-          backgroundColor: 'white',
-          borderTop: '1px solid var(--border-color)',
+          backgroundColor: 'var(--primary)',
+          borderTop: '1px solid var(--primary-dark)',
           display: 'flex',
           zIndex: 100,
           boxShadow: '0 -4px 12px rgba(0,0,0,0.07)',
@@ -138,9 +138,9 @@ function App() {
                   alignItems: 'center',
                   justifyContent: 'center',
                   padding: '10px 4px 14px',
-                  color: isActive ? 'var(--primary)' : 'var(--text-muted)',
+                  color: isActive ? 'white' : 'rgba(255, 255, 255, 0.6)',
                   gap: '4px',
-                  borderTop: (!isSearchBtn && isActive) ? '3px solid var(--primary)' : '3px solid transparent',
+                  borderTop: (!isSearchBtn && isActive) ? '3px solid white' : '3px solid transparent',
                   transition: 'all 0.2s ease',
                   backgroundColor: 'transparent',
                   position: 'relative',
@@ -156,10 +156,10 @@ function App() {
                         width: '56px',
                         height: '56px',
                         borderRadius: '50%',
-                        backgroundColor: 'var(--primary)',
-                        color: 'white',
-                        boxShadow: '0 4px 12px rgba(21, 108, 56, 0.4)',
-                        border: '4px solid white',
+                        backgroundColor: 'white',
+                        color: 'var(--primary)',
+                        boxShadow: '0 4px 12px rgba(0, 0, 0, 0.2)',
+                        border: '4px solid var(--primary)',
                     }}>
                         <Icon size={28} strokeWidth={2.5} />
                     </div>

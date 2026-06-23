@@ -208,11 +208,12 @@ const HomePage: React.FC<HomePageProps> = ({ onNavigate, onStartKpr }) => {
     return (
         <div style={{ backgroundColor: 'var(--bg-color)', minHeight: '100vh', paddingBottom: '80px' }}>
 
-            {/* ── Sticky green header ── */}
+            {/* ── Sticky header ── */}
             <div style={{
                 position: 'sticky', top: 0, zIndex: 20,
-                background: 'var(--primary)',
+                background: 'white',
                 padding: '0.75rem 1rem 1rem',
+                borderBottom: '1px solid var(--border-color)',
             }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
                     <div style={{ flex: 1, position: 'relative' }}>
@@ -228,9 +229,8 @@ const HomePage: React.FC<HomePageProps> = ({ onNavigate, onStartKpr }) => {
                             value={filters.keyword || ''}
                             style={{
                                 width: '100%', paddingLeft: '38px', paddingRight: '12px',
-                                height: '44px', borderRadius: '22px', border: 'none',
-                                backgroundColor: 'white', fontSize: '0.9rem', color: '#1F2937',
-                                boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
+                                height: '44px', borderRadius: '22px', border: '1px solid #E5E7EB',
+                                backgroundColor: '#F3F4F6', fontSize: '0.9rem', color: '#1F2937',
                             }}
                         />
                     </div>
@@ -243,11 +243,12 @@ const HomePage: React.FC<HomePageProps> = ({ onNavigate, onStartKpr }) => {
                             onClick={onClick}
                             style={{
                                 position: 'relative', width: '40px', height: '40px', borderRadius: '50%',
-                                backgroundColor: 'rgba(255,255,255,0.2)', display: 'flex',
+                                backgroundColor: '#F3F4F6', display: 'flex',
                                 alignItems: 'center', justifyContent: 'center', flexShrink: 0,
+                                border: '1px solid #E5E7EB',
                             }}
                         >
-                            <Icon size={20} color="white" />
+                            <Icon size={20} color="var(--primary)" />
                             {badge > 0 && (
                                 <span style={{
                                     position: 'absolute', top: '-2px', right: '-2px',
@@ -268,14 +269,14 @@ const HomePage: React.FC<HomePageProps> = ({ onNavigate, onStartKpr }) => {
                             onClick={() => setShowUserMenu(v => !v)}
                             style={{
                                 width: '40px', height: '40px', borderRadius: '50%',
-                                backgroundColor: isLoggedIn ? 'white' : 'rgba(255,255,255,0.2)',
+                                backgroundColor: isLoggedIn ? 'var(--primary-light)' : '#F3F4F6',
                                 display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                border: isLoggedIn ? '2px solid rgba(255,255,255,0.8)' : 'none',
+                                border: isLoggedIn ? '2px solid var(--primary)' : '1px solid #E5E7EB',
                             }}
                         >
                             {isLoggedIn
                                 ? <span style={{ fontWeight: 800, fontSize: '0.85rem', color: 'var(--primary)' }}>{userName.charAt(0).toUpperCase()}</span>
-                                : <User size={20} color="white" />}
+                                : <User size={20} color="var(--primary)" />}
                         </button>
 
                         {showUserMenu && (
@@ -399,7 +400,7 @@ const HomePage: React.FC<HomePageProps> = ({ onNavigate, onStartKpr }) => {
                 marginBottom: '0.5rem',
             }}>
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 1rem', marginBottom: '0.75rem' }}>
-                    <h2 style={{ fontSize: '1rem', fontWeight: 800, color: '#111827' }}>Layanan</h2>
+                    <h2 style={{ fontSize: '0.9rem', fontWeight: 800, color: '#2663eb' }}>Layanan</h2>
                     <button style={{ fontSize: '0.75rem', color: 'var(--primary)', fontWeight: 600, background: 'none', border: 'none' }}>
                         Lihat Semua
                     </button>
@@ -474,9 +475,9 @@ const HomePage: React.FC<HomePageProps> = ({ onNavigate, onStartKpr }) => {
             {/* ── Property List ── */}
             <div style={{ padding: '0 1rem' }}>
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.75rem' }}>
-                    <h2 style={{ fontSize: '1.3rem', fontWeight: 800, color: '#156d38', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    <h2 style={{ fontSize: '1.3rem', fontWeight: 800, color: '#2663eb', display: 'flex', alignItems: 'center', gap: '6px' }}>
                         <RiHome5Fill size={20} color="var(--primary)" />
-                        <span>rumah<span style={{ fontSize: '0.75em', fontWeight: 400, color: '#156d38' }}>.go.id</span></span>
+                        <span>rumah<span style={{ fontSize: '0.75em', fontWeight: 400, color: '#2663eb' }}>.go.id</span></span>
                     </h2>
                     {(filters.keyword || filters.provinsi || filters.kabKota || filters.kecamatan || filters.sortByDistance) ? (
                         <button
@@ -489,7 +490,7 @@ const HomePage: React.FC<HomePageProps> = ({ onNavigate, onStartKpr }) => {
                             ✕ Hapus Filter
                         </button>
                     ) : (
-                        <button 
+                        <button
                             onClick={() => setFilters({})}
                             style={{ fontSize: '0.75rem', color: 'var(--primary)', fontWeight: 600, background: 'none', border: 'none' }}
                         >
