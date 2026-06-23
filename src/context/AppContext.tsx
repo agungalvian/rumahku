@@ -84,7 +84,7 @@ const AppContext = createContext<AppState | undefined>(undefined);
 export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     const [wishlist, setWishlist] = useState<string[]>([]);
     const [notifications, setNotifications] = useState<string[]>([
-        "Rumah di Pesona Permata Bogor sedang promo! Turun harga dari Rp480jt ke Rp450jt."
+        "Rumah di Pesona Permata Bogor sedang promo! Turun harga dari Rp180jt ke Rp175jt."
     ]);
     const [kprStep, setKprStep] = useState(1);
     const [kprFormData, setKprFormData] = useState<KprFormData>(defaultKprForm);
@@ -154,7 +154,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
         setKprFormData(prev => ({ ...prev, ...data }));
     const submitKpr = async () => {
         const prop = properties.find(p => p.id === kprFormData.selectedPropertyId);
-        
+
         try {
             // If guest, register account first
             if (!isLoggedIn) {
