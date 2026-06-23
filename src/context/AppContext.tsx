@@ -82,7 +82,10 @@ const defaultKprForm: KprFormData = {
 const AppContext = createContext<AppState | undefined>(undefined);
 
 export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-    const [wishlist, setWishlist] = useState<string[]>([]);
+    const [wishlist, setWishlist] = useState<string[]>(() => {
+        const saved = localStorage.getItem('umah_wishlist');
+        return saved ? JSON.parse(saved) : [];
+    });
     const [notifications, setNotifications] = useState<string[]>([
         "Rumah di Pesona Permata Bogor sedang promo! Turun harga dari Rp180jt ke Rp175jt."
     ]);
@@ -126,7 +129,9 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
 
     const addToWishlist = (id: string) => {
         if (!wishlist.includes(id)) {
-            setWishlist([...wishlist, id]);
+            const newList = [...wishlist, id];
+            setWishlist(newList);
+            localStorage.setItem('umah_wishlist', JSON.stringify(newList));
             const prop = properties.find(p => p.id === id);
             if (prop?.isPromo) {
                 addNotification(`Kabar baik! Rumah impianmu di ${prop.title} sedang turun harga!`);
@@ -135,7 +140,9 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     };
 
     const removeFromWishlist = (id: string) => {
-        setWishlist(wishlist.filter(wId => wId !== id));
+        const newList = wishlist.filter(wId => wId !== id);
+        setWishlist(newList);
+        localStorage.setItem('umah_wishlist', JSON.stringify(newList));
     };
 
     const addNotification = (msg: string) => {

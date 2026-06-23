@@ -48,12 +48,12 @@ const PropertyCard: React.FC<PropertyCardProps> = ({ property, onClick, variant 
                     return (
                         <div style={{ position: 'absolute', top: '8px', left: '8px', display: 'flex', gap: '8px', alignItems: 'center' }}>
                             <div style={{
-                                backgroundColor: isTapak ? 'rgba(38, 99, 235, 0.95)' : 'rgba(255, 255, 255, 0.95)',
+                                backgroundColor: isTapak ? 'rgba(14, 165, 233, 0.85)' : 'rgba(249, 115, 22, 0.85)',
                                 padding: '4px 8px',
                                 borderRadius: '6px', display: 'flex', alignItems: 'center',
                                 boxShadow: '0 1px 4px rgba(0,0,0,0.15)',
-                                fontSize: '0.75rem', fontWeight: 700, 
-                                color: isTapak ? '#ffffff' : 'var(--primary)',
+                                fontSize: '0.75rem', fontWeight: 700,
+                                color: '#ffffff',
                                 height: '32px', boxSizing: 'border-box'
                             }}>
                                 {isTapak ? 'Tapak' : 'Susun'}
