@@ -301,7 +301,7 @@ export const useProperties = (): UsePropertiesResult => {
     const { properties, wilayahOptions } = useMemo(() => {
         let mapped = globalRawData
             .map(mapToProperty)
-            .filter((p): p is Property => p !== null);
+            .filter((p): p is Property => p !== null && p.price > 0);
 
         const provSet = new Set<string>();
         const kabByProv: { [prov: string]: Set<string> } = {};
@@ -376,6 +376,21 @@ export const useProperties = (): UsePropertiesResult => {
                 mapped.sort((a, b) => (a.distance || 0) - (b.distance || 0));
             }
         }
+
+        // Apply subsidi priority per chunk of 10
+        const chunked = [];
+        for (let i = 0; i < mapped.length; i += 10) {
+            let chunk = mapped.slice(i, i + 10);
+            chunk.sort((a, b) => {
+                const aIsSubsidi = a.type === 'Subsidi';
+                const bIsSubsidi = b.type === 'Subsidi';
+                if (aIsSubsidi && !bIsSubsidi) return -1;
+                if (!aIsSubsidi && bIsSubsidi) return 1;
+                return 0; // preserve existing order (terbaru, terdekat, dll)
+            });
+            chunked.push(...chunk);
+        }
+        mapped = chunked;
 
         return { properties: mapped, wilayahOptions: wOptions };
     }, [globalRawData, globalFilters, globalUserCoords]);
