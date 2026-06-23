@@ -16,7 +16,7 @@ app.get('/api/properties/search', async (req, res) => {
         const limit = parseInt(req.query.limit) || 10;
         const sort = req.query.sort;
         
-        let query = "SELECT * FROM properties WHERE jsonb_array_length(tipe_rumah) > 0";
+        let query = "SELECT * FROM properties WHERE jsonb_typeof(tipe_rumah) = 'array' AND jsonb_array_length(tipe_rumah) > 0";
         let values = [];
         let orderBy = 'ORDER BY created_at DESC';
         
