@@ -8,6 +8,51 @@ const port = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 
+const path = require('path');
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
+app.get('/api/properties/search', async (req, res) => {
+    try {
+        const limit = parseInt(req.query.limit) || 10;
+        const sort = req.query.sort;
+        
+        let query = 'SELECT * FROM properties';
+        let values = [];
+        let orderBy = 'ORDER BY created_at DESC';
+        
+        if (sort === 'tapak-dahulu') {
+            orderBy = "ORDER BY CASE WHEN jenis_perumahan = 'Rumah Tapak' THEN 1 ELSE 2 END, created_at DESC";
+        } else if (sort === 'susun-dahulu') {
+            orderBy = "ORDER BY CASE WHEN jenis_perumahan = 'Rumah Susun' THEN 1 ELSE 2 END, created_at DESC";
+        }
+        
+        query += ` ${orderBy} LIMIT $1`;
+        values.push(limit);
+        
+        const result = await pool.query(query, values);
+        
+        const data = result.rows.map(r => ({
+            idLokasi: r.id_lokasi,
+            namaPerumahan: r.nama_perumahan,
+            jenisPerumahan: r.jenis_perumahan,
+            jumlahUnit: r.jumlah_unit,
+            koordinatPerumahan: r.koordinat_perumahan,
+            foto: r.foto || [],
+            tipeRumah: r.tipe_rumah || [],
+            wilayah: r.wilayah || {},
+            pengembang: r.pengembang || {},
+            kantorPemasaran: r.kantor_pemasaran || [],
+            aktivasi: r.aktivasi,
+            rating: r.rating
+        }));
+        
+        res.json({ data });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Database error' });
+    }
+});
+
 // Set up PostgreSQL connection
 const pool = new Pool({
     user: process.env.POSTGRES_USER || 'tapera_user',

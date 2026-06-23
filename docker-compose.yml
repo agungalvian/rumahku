@@ -18,6 +18,9 @@ services:
       - POSTGRES_PASSWORD=tapera_password
       - POSTGRES_DB=tapera_db
       - POSTGRES_HOST=db
+    volumes:
+      - ./server:/usr/src/app
+      - /usr/src/app/node_modules
     depends_on:
       - db
     restart: always

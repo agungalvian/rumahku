@@ -38,16 +38,37 @@ const PropertyCard: React.FC<PropertyCardProps> = ({ property, onClick, variant 
                     alt={property.title}
                     style={{ width: '100%', aspectRatio: variant === 'grid' ? '1 / 1' : 'auto', height: variant === 'grid' ? 'auto' : '200px', objectFit: 'cover' }}
                 />
-                {property.type === 'Subsidi' && (
-                    <div style={{
-                        position: 'absolute', top: '8px', left: '8px',
-                        backgroundColor: 'rgba(255,255,255,0.92)', padding: '4px',
-                        borderRadius: '6px', display: 'flex', alignItems: 'center',
-                        boxShadow: '0 1px 4px rgba(0,0,0,0.15)'
-                    }}>
-                        <img src="/subsidi-logo.png" alt="Subsidi" style={{ height: '32px', width: '32px', objectFit: 'contain' }} />
-                    </div>
-                )}
+                {(() => {
+                    const jp = (property as any).jenisPerumahan;
+                    if (jp === 'Rumah Tapak' || jp === 'Rumah Susun') {
+                        const isTapak = jp === 'Rumah Tapak';
+                        return (
+                            <div style={{
+                                position: 'absolute', top: '8px', left: '8px',
+                                backgroundColor: isTapak ? 'rgba(38, 99, 235, 0.95)' : 'rgba(255, 255, 255, 0.95)',
+                                padding: '4px 8px',
+                                borderRadius: '6px', display: 'flex', alignItems: 'center',
+                                boxShadow: '0 1px 4px rgba(0,0,0,0.15)',
+                                fontSize: '0.75rem', fontWeight: 700, 
+                                color: isTapak ? '#ffffff' : 'var(--primary)'
+                            }}>
+                                {isTapak ? 'Tapak' : 'Susun'}
+                            </div>
+                        );
+                    } else if (property.type === 'Subsidi') {
+                        return (
+                            <div style={{
+                                position: 'absolute', top: '8px', left: '8px',
+                                backgroundColor: 'rgba(255,255,255,0.92)', padding: '4px',
+                                borderRadius: '6px', display: 'flex', alignItems: 'center',
+                                boxShadow: '0 1px 4px rgba(0,0,0,0.15)'
+                            }}>
+                                <img src="/subsidi-logo.png" alt="Subsidi" style={{ height: '32px', width: '32px', objectFit: 'contain' }} />
+                            </div>
+                        );
+                    }
+                    return null;
+                })()}
                 <button
                     onClick={toggleWishlist}
                     style={{

@@ -65,6 +65,7 @@ const mapStatus = (status: string): PropertyType =>
 
 const toImageUrl = (path: string): string => {
     if (!path) return '';
+    if (path.startsWith('/uploads/')) return path; // Local images
     // If it's already an absolute URL to tapera, proxy it
     if (path.startsWith('https://sikumbang.tapera.go.id')) {
         return path.replace('https://sikumbang.tapera.go.id', '/api/tapera-static');
@@ -268,7 +269,7 @@ export const useProperties = (): UsePropertiesResult => {
                     params.append('sort', 'terbaru');
                 }
 
-                const res = await fetch(`/api/tapera/ajax/lokasi/search?${params.toString()}`, {
+                const res = await fetch(`/api/properties/search?${params.toString()}`, {
                     headers: { Accept: 'application/json' },
                 });
                 

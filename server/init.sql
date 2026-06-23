@@ -39,5 +39,22 @@ ON CONFLICT (nik) DO NOTHING;
 -- Akun 3: Belum terdaftar (Pekerja Mandiri yang baru mendaftar)
 INSERT INTO peserta (nik, password, nama_lengkap, tanggal_lahir, status)
 VALUES
-    ('3333444455556666', 'password123', 'Ahmad Belum Daftar', '2000-01-01', 'Bukan Peserta')
 ON CONFLICT (nik) DO NOTHING;
+
+-- Table for Properties (sync from Tapera)
+CREATE TABLE IF NOT EXISTS properties (
+    id_lokasi VARCHAR(255) PRIMARY KEY,
+    nama_perumahan VARCHAR(255),
+    jenis_perumahan VARCHAR(100),
+    jumlah_unit INTEGER,
+    koordinat_perumahan VARCHAR(255),
+    foto JSONB,
+    tipe_rumah JSONB,
+    wilayah JSONB,
+    pengembang JSONB,
+    kantor_pemasaran JSONB,
+    aktivasi BOOLEAN,
+    rating NUMERIC(3, 2),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
